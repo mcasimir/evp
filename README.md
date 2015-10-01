@@ -32,23 +32,6 @@ Configuration files are JSON files of the form:
 }
 ```
 
-### Built in event sources
-
-#### RabbitMQ
-
-``` json
-{
-  "host": "srv-bln-03",
-  "vhost": "hansolo",
-  "username": "guest",
-  "password": "guest",
-  "queue": "data-map-Auctionata.Consignment.Message.Valuation.V1.ValuationRequest",
-  "exchange": "Auctionata.Consignment.Message.Valuation.V1.ValuationRequest",
-  "routingKey": "frontdoor-valuation-request",
-  "permanent": true
-}
-```
-
 ### Built in commands
 
 #### Transform

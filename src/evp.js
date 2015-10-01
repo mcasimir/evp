@@ -17,8 +17,8 @@ evp.registerCommand = function(name, cmd) {
   return EventMapper.registerCommand(name, cmd);
 };
 
-evp.registerSource = function(name, src) {
-  return EventMapper.registerSource(name, src);
+evp.registerEventSource = function(name, src) {
+  return EventMapper.registerEventSource(name, src);
 };
 
 evp.EventSource = EventSource;

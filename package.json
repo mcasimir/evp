@@ -18,5 +18,41 @@
   "bugs": {
     "url": "https://github.com/mcasimir/evp/issues"
   },
-  "homepage": "https://github.com/mcasimir/evp#readme"
+  "homepage": "https://github.com/mcasimir/evp#readme",
+  "devDependencies": {
+    "babelify": "^6.3.0",
+    "browserify": "^11.1.0",
+    "clone": "^1.0.2",
+    "del": "^2.0.2",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.1",
+    "gulp-chug": "^0.4.2",
+    "gulp-connect": "^2.2.0",
+    "gulp-jasmine": "^2.0.1",
+    "gulp-jshint": "^1.11.2",
+    "gulp-sftp": "^0.1.5",
+    "gulp-shell": "^0.4.3",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-ssh": "^0.5.3",
+    "nock": "^2.10.0",
+    "upath": "^0.1.6",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "vinyl-source-stream2": "^0.1.1",
+    "watchify": "^3.4.0"
+  },
+  "dependencies": {
+    "amqp": "^0.2.4",
+    "express": "^4.13.3",
+    "express-babelify-middleware": "^0.1.0",
+    "glob": "^5.0.14",
+    "jsonpath-object-transform": "^1.0.4",
+    "lodash": "^3.10.1",
+    "mssql": "^2.2.0",
+    "node-stringify": "0.0.18",
+    "node-uuid": "^1.4.3",
+    "optimist": "^0.6.1",
+    "request": "^2.63.0",
+    "squel": "^4.2.0"
+  }
 }

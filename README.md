@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mcasimir/evp.svg?branch=master)](https://travis-ci.org/mcasimir/evp)
+
 # evp (Event Pipeline)
 
 Listen from JSON Event sources and to process each event

@@ -39,9 +39,9 @@ describe('EventMapper', function() {
         dummySource: {
           type: 'dummySource',
           config: {},
-          process: {
-            dummy: {}
-          }
+          process: [
+            {dummy: {}}
+          ]
         }
       });
 
@@ -59,9 +59,9 @@ describe('EventMapper', function() {
         dummySource: {
           type: 'dummySource',
           config: {},
-          process: {
-            error: {}
-          }
+          process: [
+            {error: {}}
+          ]
         }
       });
 

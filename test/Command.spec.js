@@ -20,6 +20,10 @@ describe('Command', function() {
   });
 
   describe('create', function() {
+    beforeEach(function(){
+      delete Command.registry;
+    });
+    
     it('creates a new command instance', function() {
       let now = (new Date()).getTime();
       let fn = function() {
@@ -37,8 +41,21 @@ describe('Command', function() {
       expect(cmd instanceof Command).toBe(true);
       expect(cmd.run(evt)).toBe(evt);
     });
-  });
 
+    it('creates a registered command', function() {
+      class Cmd extends Command {
+
+      }
+      Command.register('cmd', Cmd);
+      let cmd = Command.create('cmd', {});
+      expect(cmd instanceof Cmd).toBe(true);
+    });
+
+    it('do not create a registered command', function() {
+      let cmd = Command.create('cmd', {});
+      expect(cmd).toBe(null);
+    });
+  });
 
   describe('register', function() {
     beforeEach(function(){
@@ -72,22 +89,6 @@ describe('Command', function() {
       }).not.toThrow();
 
       expect(Command.get('newCommand')).toBeFalsy();
-    });
-  });
-
-  describe('instantiate', function() {
-    it('creates a registered command', function() {
-      class Cmd extends Command {
-
-      }
-      Command.register('cmd', Cmd);
-      let cmd = Command.instantiate('cmd', {});
-      expect(cmd instanceof Cmd).toBe(true);
-    });
-
-    it('creates a registered command', function() {
-      let cmd = Command.instantiate('cmd', {});
-      expect(cmd).toBe(null);
     });
   });
 

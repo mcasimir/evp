@@ -24,16 +24,15 @@ class EventMapper extends EventEmitter {
 
   listen() {
     var promises = _.map(this.sources, (source) => {
-      source.on('event', (event) => {
-        this
-          .processEvent(source, event)
-          .then((result) => {
-            this.emit('eventProcessed', {source: source, result: result});
-          })
-          .catch((error) => {
-            this.emit('eventProcessingError', {source: source, error: error});
-          });
+
+      source.on('eventProcessed', (evt) => {
+        this.emit('eventProcessed', evt);
       });
+
+      source.on('eventProcessingError', (err) => {
+        this.emit('eventProcessingError', err);
+      });
+
       return source.listen();
     });
 

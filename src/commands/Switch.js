@@ -1,12 +1,38 @@
 'use strict';
 
+var jsonPath  = require('JSONPath');
 var Command   = require('../Command');
+var JsonConfigurationParser  = require('../json/JsonConfigurationParser');
 
 class Switch extends Command {
 
+  constructor(config) {
+    super(config);
+    var parser = new JsonConfigurationParser();
+
+    this.tests = [];
+
+    for (var k in config) {
+      if (config.hasOwnProperty(k)) {
+        this.tests.push({
+          cond: k,
+          pipe: parser.parsePipeline(config[k])
+        });
+      }
+    }
+  }
+
   run(event){
-    let pipeline = this.config;
-     
+    var promises = [];
+
+    this.tests.forEach(function(test) {
+      var cond = jsonPath.eval(event, test.cond);
+      if (cond && cond.length) {
+        promises.push(test.pipe.run(event));
+      }
+    });
+
+    return Promise.all(promises);
   }
 
 }

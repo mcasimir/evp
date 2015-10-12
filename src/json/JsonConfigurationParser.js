@@ -13,17 +13,11 @@ class JsonConfigurationParser {
     var name = Object.keys(def)[0];
     var config = def[name];
 
-    for (var prop in config) {
-      if (config.hasOwnProperty(prop)) {
-        if (name.match(/!$/)) {
-          var pipedef = config[prop];
-          delete config[prop];
-          config[name.replace(/!$/, '')] = this.parsePipeline(pipedef);
-        }
-      }
+    var cmd = Command.create(name, config);
+    if (!cmd) {
+      throw new Error(`Unable to find an Command for type ${name}`);
     }
-
-    return Command.create(name, config);
+    return cmd;
   }
 
   parsePipeline(cmds) {
@@ -41,6 +35,8 @@ class JsonConfigurationParser {
       throw new Error(`Unable to find an EventSource for type ${definition.type}`);
     }
     source.pipelines.push(this.parsePipeline(definition.process));
+
+    return source;
   }
 
   parse(tree) {

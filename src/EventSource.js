@@ -62,7 +62,15 @@ class EventSource extends EventEmitter {
     this.emit('event', event);
 
     var pipelinePromises = this.pipelines.map((pipeline) => {
-      return pipeline.run(event);
+      return pipeline.run(event)
+        .then((result) => {
+          this.emit('eventProcessed', {source: this, result: result});
+          return result;
+        })
+        .catch((error) => {
+          this.emit('eventProcessingError', {source: this, error: error});
+          return error;
+        });
     });
 
     return Promise.all(pipelinePromises);

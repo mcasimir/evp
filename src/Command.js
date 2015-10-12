@@ -27,9 +27,26 @@ class Command {
     };
   }
 
-  static create(obj, config) {
+  static createFromObj(obj, config) {
     obj = obj || {};
     return new (this.extend(obj))(config);
+  }
+
+  static createFromRegistry(name, config) {
+    var Cls = this.get(name);
+    if (Cls) {
+      return new Cls(config);
+    } else {
+      return null;
+    }
+  }
+
+  static create(typeOrObj, config) {
+    if (typeof typeOrObj === 'string') {
+      return this.createFromRegistry(typeOrObj, config);
+    } else {
+      return this.createFromObj(typeOrObj, config);
+    }
   }
 
   constructor(config) {

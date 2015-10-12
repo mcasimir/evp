@@ -1,18 +1,18 @@
 'use strict';
 
-var Command = require('../src/Command');
+let Command = require('../src/Command');
 
 describe('Command', function() {
 
   describe('extends', function() {
     it('creates a new command class', function() {
-      var now = (new Date()).getTime();
-      var fn = function() {
+      let now = (new Date()).getTime();
+      let fn = function() {
         return now;
       };
 
-      var CmdClass = Command.extend({ run: fn });
-      var cmd = new CmdClass();
+      let CmdClass = Command.extend({ run: fn });
+      let cmd = new CmdClass();
       expect(cmd instanceof Command).toBe(true);
 
       expect(cmd.run()).toBe(now);
@@ -21,19 +21,19 @@ describe('Command', function() {
 
   describe('create', function() {
     it('creates a new command instance', function() {
-      var now = (new Date()).getTime();
-      var fn = function() {
+      let now = (new Date()).getTime();
+      let fn = function() {
         return now;
       };
 
-      var cmd = Command.create({ run: fn });
+      let cmd = Command.create({ run: fn });
       expect(cmd instanceof Command).toBe(true);
       expect(cmd.run()).toBe(now);
     });
 
     it('creates a new pass through instance if called without arguments', function() {
-      var cmd = Command.create();
-      var evt = { x: 5 };
+      let cmd = Command.create();
+      let evt = { x: 5 };
       expect(cmd instanceof Command).toBe(true);
       expect(cmd.run(evt)).toBe(evt);
     });
@@ -46,7 +46,7 @@ describe('Command', function() {
     });
 
     it('registers a new command', function() {
-      var fn = function() {};
+      let fn = function() {};
       Command.register('newCommand', fn);
       expect(Command.registry).toBeDefined();
       if (Command.registry) {
@@ -61,7 +61,7 @@ describe('Command', function() {
     });
 
     it('gets a registered command', function() {
-      var fn = function() {};
+      let fn = function() {};
       Command.register('newCommand', fn);
       expect(Command.get('newCommand')).toBe(fn);
     });
@@ -75,18 +75,34 @@ describe('Command', function() {
     });
   });
 
+  describe('instantiate', function() {
+    it('creates a registered command', function() {
+      class Cmd extends Command {
+
+      }
+      Command.register('cmd', Cmd);
+      let cmd = Command.instantiate('cmd', {});
+      expect(cmd instanceof Cmd).toBe(true);
+    });
+
+    it('creates a registered command', function() {
+      let cmd = Command.instantiate('cmd', {});
+      expect(cmd).toBe(null);
+    });
+  });
+
   describe('run', function() {
     it('should have access to configuration', function() {
-      var conf = {x: 5};
-      var internalConf;
+      let conf = {x: 5};
+      let internalConf;
 
-      var Cmd = Command.extend({
+      let Cmd = Command.extend({
         run: function() {
           internalConf = this.config;
         }
       });
 
-      var cmd = new Cmd(conf);
+      let cmd = new Cmd(conf);
       cmd.run();
       expect(internalConf).toBe(conf);
     });
@@ -95,9 +111,9 @@ describe('Command', function() {
 
   describe('pipe', function() {
     it('wraps into promise if run returns plain object', function(done) {
-      var obj = {x: 5};
+      let obj = {x: 5};
 
-      var cmd = Command.create({
+      let cmd = Command.create({
         run: function(){
           return obj;
         }
@@ -110,23 +126,23 @@ describe('Command', function() {
     });
 
     it('returns the same promise if run returns a promise', function() {
-      var obj = {x: 5};
-      var prom = Promise.resolve(obj);
+      let obj = {x: 5};
+      let prom = Promise.resolve(obj);
 
-      var cmd = Command.create({
+      let cmd = Command.create({
         run: function(){
           return prom;
         }
       });
 
-      var pipeProm = cmd.pipe(true);
+      let pipeProm = cmd.pipe(true);
       expect(pipeProm === prom).toBe(true);
     });
 
     it('skips run if called with false', function() {
-      var runned = false;
+      let runned = false;
 
-      var cmd = Command.create({
+      let cmd = Command.create({
         run: function(){
           runned = true;
         }
@@ -137,7 +153,7 @@ describe('Command', function() {
     });
 
     it('resolve to false if called with false', function() {
-      var cmd = Command.create();
+      let cmd = Command.create();
 
       cmd.pipe(false).then(function(res) {
         expect(res).toBe(false);

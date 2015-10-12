@@ -2,6 +2,9 @@
 
 var _         = require('lodash');
 var Pipeline  = require('./Pipeline');
+var Command = require('./Command');
+var EventSource = require('./EventSource');
+
 var EventEmitter = require('events');
 
 class EventMapper extends EventEmitter {
@@ -40,7 +43,7 @@ class EventMapper extends EventEmitter {
     sourcesConfig = sourcesConfig || {};
 
     _.each(sourcesConfig, (sourceConf, sourceName) => {
-      var EventSourceClass = EventMapper.eventSources[sourceConf.type];
+      var EventSourceClass = EventSource.get(sourceConf.type);
       if (!EventSourceClass) {
         throw new Error(`Unable to find an EventSource for type ${sourceConf.type}`);
       }
@@ -59,7 +62,7 @@ class EventMapper extends EventEmitter {
         var pair = _.pairs(cmd)[0];
         var commandName = pair[0];
         var commandConf = pair[1];
-        var CommandClass = EventMapper.commands[commandName];
+        var CommandClass = Command.get(commandName);
 
         if (!CommandClass) {
           throw new Error(`Unable to find a Command for '${commandName}'`);
@@ -92,16 +95,5 @@ class EventMapper extends EventEmitter {
   }
 
 }
-
-EventMapper.eventSources = {};
-EventMapper.commands = {};
-
-EventMapper.registerEventSource = function(name, source) {
-  EventMapper.eventSources[name] = source;
-};
-
-EventMapper.registerCommand = function(name, command) {
-  EventMapper.commands[name] = command;
-};
 
 module.exports = EventMapper;

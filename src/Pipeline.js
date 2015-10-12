@@ -11,7 +11,7 @@ class Pipeline {
 
   run(event){
     var fns = _.map(this.commands, function(command){
-      return _.bind(command.run, command);
+      return _.bind(command.pipe, command);
     });
     return waterfall(fns, event);
   }

@@ -84,8 +84,8 @@ The core is independent from specific sources and allows for different
 commands implementation and extension:
 
 ``` js
-EventMapper.registerEventSource('myEventSourceName', MyEventSource);
-EventMapper.registerCommand('myCommandName', MyCommand);
+EventSource.register('myEventSourceName', MyEventSource);
+Command.register('myCommandName', MyCommand);
 
 var eventMapper = new EventMapper();
 
@@ -113,7 +113,7 @@ class MyEventSource extends EventSource {
 
 }
 
-EventMapper.registerEventSource('MySource', MyEventSource);
+EventSource.register('MySource', MyEventSource);
 ```
 
 ``` json
@@ -143,7 +143,7 @@ class MailCommand extends Command {
   }
 }
 
-EventMapper.registerCommand('email', MyCommand);
+Command.register('email', MyCommand);
 ```
 
 ``` json

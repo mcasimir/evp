@@ -2,13 +2,13 @@
 
 var jsonPath  = require('JSONPath');
 var Command   = require('../Command');
-var JsonConfigurationParser  = require('../json/JsonConfigurationParser');
+var JsonDsl  = require('../dsl/JsonDsl');
 
 class Switch extends Command {
 
   constructor(config) {
     super(config);
-    var parser = new JsonConfigurationParser();
+    var parser = new JsonDsl();
 
     this.tests = [];
 

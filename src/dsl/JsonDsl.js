@@ -5,7 +5,7 @@ var Command = require('../Command');
 var EventSource = require('../EventSource');
 var Pipeline = require('../Pipeline');
 
-class JsonConfigurationParser {
+class JsonDsl {
   constructor() {
   }
 
@@ -64,4 +64,4 @@ class JsonConfigurationParser {
   }
 }
 
-module.exports = JsonConfigurationParser;
+module.exports = JsonDsl;

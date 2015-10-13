@@ -1,7 +1,7 @@
 'use strict';
 
 var _         = require('lodash');
-var JsonConfigurationParser  = require('./json/JsonConfigurationParser');
+var JsonDsl  = require('./dsl/JsonDsl');
 var EventEmitter = require('events');
 
 class EventMapper extends EventEmitter {
@@ -18,7 +18,7 @@ class EventMapper extends EventEmitter {
   }
 
   configure(sourcesConfig) {
-    var parser = new JsonConfigurationParser();
+    var parser = new JsonDsl();
     this.sources = parser.parse(sourcesConfig);
   }
 

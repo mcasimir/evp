@@ -10,8 +10,9 @@ class JsonConfigurationParser {
   }
 
   parseCommand(def) {
-    var name = Object.keys(def)[0];
-    var config = def[name];
+    var pair = this.parsePair(def);
+    var name = pair.key;
+    var config = pair.value;
 
     var cmd = Command.create(name, config);
     if (!cmd) {
@@ -21,9 +22,12 @@ class JsonConfigurationParser {
   }
 
   parsePipeline(cmds) {
-    if (!Array.isArray(cmds)) {
+    if (_.isObject(cmds) && !Array.isArray(cmds)) {
+      cmds = [cmds];
+    } else if (!Array.isArray(cmds)) {
       cmds = [];
     }
+
     return new Pipeline(cmds.map((cmdDef) => {
       return this.parseCommand(cmdDef);
     }));
@@ -37,6 +41,17 @@ class JsonConfigurationParser {
     source.pipelines.push(this.parsePipeline(definition.process));
 
     return source;
+  }
+
+  parsePair(obj) {
+    obj = obj || {};
+    var pair = _.pairs(obj)[0];
+    if (pair) {
+      return {
+        key: pair[0],
+        value: pair[1]
+      };
+    }
   }
 
   parse(tree) {

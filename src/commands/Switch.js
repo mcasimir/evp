@@ -15,7 +15,7 @@ class Switch extends Command {
     for (var k in config) {
       if (config.hasOwnProperty(k)) {
         this.tests.push({
-          cond: k,
+          cond: '' + k,
           pipe: parser.parsePipeline(config[k])
         });
       }

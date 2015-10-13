@@ -4,7 +4,7 @@ var Command   = require('../Command');
 
 class Discard extends Command {
   run(){
-    return false;
+    return Promise.resolve(false);
   }
 }
 

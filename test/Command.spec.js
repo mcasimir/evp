@@ -23,7 +23,7 @@ describe('Command', function() {
     beforeEach(function(){
       delete Command.registry;
     });
-    
+
     it('creates a new command instance', function() {
       let now = (new Date()).getTime();
       let fn = function() {
@@ -51,7 +51,7 @@ describe('Command', function() {
       expect(cmd instanceof Cmd).toBe(true);
     });
 
-    it('do not create a registered command', function() {
+    it('does not create a command not registered', function() {
       let cmd = Command.create('cmd', {});
       expect(cmd).toBe(null);
     });

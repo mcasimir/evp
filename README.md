@@ -71,14 +71,14 @@ Options:
 
 **NOTE**: `Forward` default HTTP method is POST, while request.js' one is GET.
 
-#### Inspect
+#### Print
 
-Inspect command just print each event to the standard output
+Print command just print each event to the standard output
 
 Options:
 
-- `inspect.prompt`: A prompt to display along with the event
-- `inspect.depth`: `depth` to pass to `util.inspect` default to `null`
+- `Print.prompt`: A prompt to display along with the event
+- `Print.depth`: `depth` to pass to `util.Print` default to `null`
 
 ## Programmatic Api
 
@@ -86,24 +86,24 @@ The core is independent from specific sources and allows for different
 commands implementation and extension:
 
 ``` js
-EventSource.register('myEventSourceName', MyEventSource);
+Source.register('mySourceName', MySource);
 Command.register('myCommandName', MyCommand);
 
-var eventMapper = new EventMapper();
+var Processor = new Processor();
 
-eventMapper.configure(config);
-eventMapper.listen();
+Processor.configure(config);
+Processor.listen();
 ```
 
-### Implementing an EventSource
+### Implementing an Source
 
-1. Extend EventSource and implement listen()
-2. Register the new event source into EventMapper;
+1. Extend Source and implement listen()
+2. Register the new event source into Processor;
 
-NOTE: config for the eventsource will be available in `this.config`.
+NOTE: config for the Source will be available in `this.config`.
 
 ``` js
-class MyEventSource extends EventSource {
+class MySource extends Source {
 
   listen() {
     setInterval(() => {
@@ -115,7 +115,7 @@ class MyEventSource extends EventSource {
 
 }
 
-EventSource.register('MySource', MyEventSource);
+Source.register('MySource', MySource);
 ```
 
 ``` json
@@ -132,9 +132,9 @@ EventSource.register('MySource', MyEventSource);
 ### Implementing a Command
 
 1. Extend Command and implement run()
-2. Register the new command into EventMapper;
+2. Register the new command into Processor;
 
-NOTE: config for the eventsource will be available in `this.config`.
+NOTE: config for the Source will be available in `this.config`.
 
 ``` js
 class MailCommand extends Command {

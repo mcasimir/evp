@@ -4,6 +4,12 @@ let Command = require('../src/Command');
 
 describe('Command', function() {
 
+  describe('constructor', function(){
+    it('sets configuration to {} as default', function() {
+      expect((new Command()).config).toEqual({});
+    });
+  });
+
   describe('extends', function() {
     it('creates a new command class', function() {
       let now = (new Date()).getTime();

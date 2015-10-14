@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var Command = require('../Command');
-var EventSource = require('../EventSource');
+var Source = require('../Source');
 var Pipeline = require('../Pipeline');
 var JsonDslError = require('./JsonDslError');
 
@@ -35,9 +35,9 @@ class JsonDsl {
   }
 
   parseSource(name, definition) {
-    var source = EventSource.create(definition.type, name, definition.config);
+    var source = Source.create(definition.type, name, definition.config);
     if (!source) {
-      throw new JsonDslError(`Unable to find an EventSource for type ${definition.type}`);
+      throw new JsonDslError(`Unable to find an Source for type ${definition.type}`);
     }
     source.pipelines.push(this.parsePipeline(definition.process));
 

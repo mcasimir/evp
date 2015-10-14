@@ -1,27 +1,34 @@
 'use strict';
 
-var EventMapper         = require('./EventMapper');
-var Transform           = require('./commands/Transform');
-var Forward             = require('./commands/Forward');
-var Inspect             = require('./commands/Inspect');
-var EventSource         = require('./EventSource');
+var Processor           = require('./Processor');
+var Source              = require('./Source');
 var Command             = require('./Command');
 
-Command.register('transform', Transform);
-Command.register('forward', Forward);
-Command.register('inspect', Inspect);
+var Discard             = require('./commands/Discard');
+var Forward             = require('./commands/Forward');
+var If                  = require('./commands/If');
+var Log                 = require('./commands/Log');
+var Switch              = require('./commands/Switch');
+var Transform           = require('./commands/Transform');
 
-var evp = new EventMapper();
+Command.register('discard', Discard);
+Command.register('forward', Forward);
+Command.register('if', If);
+Command.register('log', Log);
+Command.register('switch', Switch);
+Command.register('transform', Transform);
+
+var evp = new Processor();
 
 evp.registerCommand = function(name, cmd) {
   return Command.register(name, cmd);
 };
 
 evp.registerSource = function(name, src) {
-  return EventSource.register(name, src);
+  return Source.register(name, src);
 };
 
-evp.EventSource = EventSource;
+evp.Source = Source;
 evp.Command = Command;
 
 module.exports = evp;

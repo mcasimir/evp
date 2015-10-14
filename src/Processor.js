@@ -4,7 +4,7 @@ var _         = require('lodash');
 var JsonDsl  = require('./dsl/JsonDsl');
 var EventEmitter = require('events');
 
-class EventMapper extends EventEmitter {
+class Processor extends EventEmitter {
 
   constructor(config) {
     super();
@@ -41,4 +41,4 @@ class EventMapper extends EventEmitter {
 
 }
 
-module.exports = EventMapper;
+module.exports = Processor;

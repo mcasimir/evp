@@ -2,7 +2,7 @@
 
 var EventEmitter = require('events');
 
-class EventSource extends EventEmitter {
+class Source extends EventEmitter {
 
   static _registryGetSet(name, value) {
     this.registry = this.registry || {};
@@ -21,7 +21,7 @@ class EventSource extends EventEmitter {
   }
 
   static extend(obj) {
-    return class extends EventSource {
+    return class extends Source {
       constructor(name, config) {
         super(name, config);
         Object.assign(this, obj);
@@ -82,4 +82,4 @@ class EventSource extends EventEmitter {
   listen() { }
 }
 
-module.exports = EventSource;
+module.exports = Source;

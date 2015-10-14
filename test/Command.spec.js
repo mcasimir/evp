@@ -63,11 +63,11 @@ describe('Command', function() {
     });
 
     it('registers a new command', function() {
-      let fn = function() {};
-      Command.register('newCommand', fn);
+      let cls = function() {};
+      Command.register('newCommand', cls);
       expect(Command.registry).toBeDefined();
       if (Command.registry) {
-        expect(Command.registry.newCommand).toBe(fn);
+        expect(Command.registry.newCommand).toBe(cls);
       }
     });
   });

@@ -4,6 +4,8 @@ var evp = require('../src/evp');
 var Processor = require('../src/Processor');
 var Command = require('../src/Command');
 var Source = require('../src/Source');
+var glob = require('glob');
+var path = require('path');
 
 describe('evp', function() {
   beforeEach(function() {
@@ -33,6 +35,15 @@ describe('evp', function() {
     class Src1 extends Source {}
     evp.registerSource('src', Src1);
     expect(Source.get('src')).toBe(Src1);
+  });
+
+  xit('should make all the defined commands available', function() {
+    // glob(path.resolve(__dirname, '../src/commands/*.js'), {nonull: false, nodir: true}, function (er, files) {
+    //   files.forEach(function(file) {
+    //     var className = path.basename(file, '.js');
+    //   });
+    //   done();
+    // });
   });
 
 });

@@ -38,8 +38,8 @@ describe('JsonDsl', function() {
     });
   });
 
-  xdescribe('parsePipeline', function(){
-
+  describe('parsePipeline', function(){
+    xit('todo', function(){});
   });
 
   describe('parseSource', function(){
@@ -73,11 +73,11 @@ describe('JsonDsl', function() {
   });
 
   describe('parsePair', function(){
-
+    xit('todo', function(){});
   });
 
-  xdescribe('parse', function(){
-
+  describe('parse', function(){
+    xit('todo', function(){});
   });
 
 });

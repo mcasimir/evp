@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/mcasimir/evp#readme",
   "devDependencies": {
+    "glob": "^5.0.15",
     "gulp": "^3.9.0",
     "gulp-jasmine": "^2.0.1",
     "gulp-jshint": "^1.11.2",

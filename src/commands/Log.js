@@ -18,9 +18,13 @@ class Log extends Command {
 
     args.push(inspect(event, { depth: this.config.depth }));
 
-    console.log.apply(console, args);
+    this._log.apply(this, args);
 
     return Promise.resolve(event);
+  }
+
+  _log() {
+    console.log.apply(console, arguments);
   }
 
 }

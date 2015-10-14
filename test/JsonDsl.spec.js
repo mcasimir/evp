@@ -14,7 +14,6 @@ describe('JsonDsl', function() {
     delete Source.registry;
   });
 
-
   describe('parseCommand', function(){
     it('Returns a new command with a registered command', function() {
       var Cmd1 = class extends Command {};

@@ -1,7 +1,6 @@
 'use strict';
 
-var transform = require('jsonpath-object-transform');
-
+var transform = require('../utils/jsonTransform');
 var Command   = require('../Command');
 
 class Transform extends Command {

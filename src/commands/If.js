@@ -1,6 +1,6 @@
 'use strict';
 
-var jsonPath  = require('JSONPath');
+var jsonPath  = require('../utils/jsonPath');
 var Command   = require('../Command');
 var JsonDsl  = require('../dsl/JsonDsl');
 
@@ -21,7 +21,7 @@ class If extends Command {
 
   run(event){
     if (this.branch && this.branch.cond) {
-      var cond = jsonPath.eval(event, this.branch.cond);
+      var cond = jsonPath(event, this.branch.cond);
       if (cond && cond.length) {
         return this.branch.pipe.run(event);
       }

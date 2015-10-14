@@ -115,7 +115,6 @@ describe('Command', function() {
     });
   });
 
-
   describe('pipe', function() {
     it('wraps into promise if run returns plain object', function(done) {
       let obj = {x: 5};

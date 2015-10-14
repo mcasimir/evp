@@ -23,6 +23,7 @@
     "glob": "^5.0.15",
     "gulp": "^3.9.0",
     "gulp-jasmine": "^2.0.1",
+    "gulp-jscs": "^3.0.1",
     "gulp-jshint": "^1.11.2",
     "gulp-release-tasks": "0.0.3",
     "nock": "^2.10.0"

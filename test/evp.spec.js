@@ -4,8 +4,8 @@ var evp = require('../src/evp');
 var Processor = require('../src/Processor');
 var Command = require('../src/Command');
 var Source = require('../src/Source');
-var glob = require('glob');
-var path = require('path');
+// var glob = require('glob');
+// var path = require('path');
 
 describe('evp', function() {
   beforeEach(function() {

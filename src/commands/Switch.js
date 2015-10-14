@@ -1,6 +1,6 @@
 'use strict';
 
-var jsonPath  = require('JSONPath');
+var jsonPath  = require('../utils/jsonPath');
 var Command   = require('../Command');
 var JsonDsl  = require('../dsl/JsonDsl');
 
@@ -26,7 +26,7 @@ class Switch extends Command {
     var promises = [];
 
     this.tests.forEach(function(test) {
-      var cond = jsonPath.eval(event, test.cond);
+      var cond = jsonPath(event, test.cond);
       if (cond && cond.length) {
         promises.push(test.pipe.run(event));
       }

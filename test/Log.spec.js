@@ -27,7 +27,7 @@ describe('Log', function() {
 
     it('should call console.log', function(done) {
       spyOn(console, 'log');
-      
+
       var event = {
         a: {
           b: {

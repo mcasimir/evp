@@ -4,7 +4,12 @@ let EventSource = require('../src/EventSource');
 
 describe('EventSource', function() {
 
+  beforeEach(function(){
+    delete EventSource.registry;
+  });
+
   describe('extends', function() {
+
     it('creates a new source class', function() {
       let now = (new Date()).getTime();
       let fn = function() {
@@ -17,12 +22,10 @@ describe('EventSource', function() {
 
       expect(src.listen()).toBe(now);
     });
+
   });
 
   describe('create', function() {
-    beforeEach(function(){
-      delete EventSource.registry;
-    });
 
     it('creates a new source instance', function() {
       let now = (new Date()).getTime();
@@ -36,24 +39,40 @@ describe('EventSource', function() {
     });
 
     it('creates a registered source', function() {
-      class Src extends EventSource {
-
-      }
+      class Src extends EventSource {}
       EventSource.register('src', Src);
-      let src = EventSource.create('src', {});
+      let src = EventSource.create('src');
       expect(src instanceof Src).toBe(true);
     });
 
     it('does not create a source not registered', function() {
-      let src = EventSource.create('src', {});
+      let src = EventSource.create('src');
       expect(src).toBe(null);
+    });
+
+    it('always sets config to empty object if config is not passed', function() {
+      class Src extends EventSource {}
+      EventSource.register('src', Src);
+      let src = EventSource.create('src');
+      expect(src.config).toEqual({});
+    });
+
+    it('passes config to created instance', function() {
+      class Src extends EventSource {}
+      EventSource.register('src', Src);
+      let src = EventSource.create('src', 'name', {x: 5});
+      expect(src.config).toEqual({x: 5});
+    });
+
+    it('passes name to created instance', function() {
+      class Src extends EventSource {}
+      EventSource.register('src', Src);
+      let src = EventSource.create('src', 'xyz', {x: 5});
+      expect(src.name).toEqual('xyz');
     });
   });
 
   describe('register', function() {
-    beforeEach(function(){
-      delete EventSource.registry;
-    });
 
     it('registers a new source', function() {
       let fn = function() {};
@@ -63,12 +82,10 @@ describe('EventSource', function() {
         expect(EventSource.registry.newEventSource).toBe(fn);
       }
     });
+
   });
 
   describe('get', function() {
-    beforeEach(function(){
-      delete EventSource.registry;
-    });
 
     it('gets a registered source', function() {
       let fn = function() {};
@@ -83,9 +100,11 @@ describe('EventSource', function() {
 
       expect(EventSource.get('newEventSource')).toBeFalsy();
     });
+
   });
 
   describe('listen', function() {
+
     it('should have access to configuration', function() {
       let conf = {x: 5};
       let internalConf;
@@ -100,6 +119,7 @@ describe('EventSource', function() {
       src.listen();
       expect(internalConf).toBe(conf);
     });
+
   });
 
 });

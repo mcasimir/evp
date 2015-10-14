@@ -3,7 +3,7 @@
 var inspect = require('util').inspect;
 var Command   = require('../Command');
 
-class Inspect extends Command {
+class Log extends Command {
 
   run(event){
     var now    = (new Date());
@@ -25,4 +25,4 @@ class Inspect extends Command {
 
 }
 
-module.exports = Inspect;
+module.exports = Log;

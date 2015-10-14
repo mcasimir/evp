@@ -3,7 +3,7 @@
 var JsonDsl = require('../src/dsl/JsonDsl');
 var JsonDslError = require('../src/dsl/JsonDslError');
 var Command = require('../src/Command');
-var EventSource = require('../src/EventSource');
+var Source = require('../src/Source');
 var dsl;
 
 describe('JsonDsl', function() {
@@ -11,7 +11,7 @@ describe('JsonDsl', function() {
   beforeEach(function() {
     dsl = new JsonDsl();
     delete Command.registry;
-    delete EventSource.registry;
+    delete Source.registry;
   });
 
 
@@ -44,8 +44,8 @@ describe('JsonDsl', function() {
 
   describe('parseSource', function(){
     it('Returns a new source with a registered source', function() {
-      var Src1 = class extends EventSource {};
-      EventSource.register('src1', Src1);
+      var Src1 = class extends Source {};
+      Source.register('src1', Src1);
       var parsed = dsl.parseSource('xyz', {type: 'src1'});
       expect(parsed instanceof Src1).toBe(true);
     });
@@ -58,15 +58,15 @@ describe('JsonDsl', function() {
     });
 
     it('Passes config to source created', function() {
-      var Src1 = class extends EventSource {};
-      EventSource.register('src1', Src1);
+      var Src1 = class extends Source {};
+      Source.register('src1', Src1);
       var parsed = dsl.parseSource('xyz', {type: 'src1', config: { x: 5 }});
       expect(parsed.config.x).toBe(5);
     });
 
     it('Passes name to source created', function() {
-      var Src1 = class extends EventSource {};
-      EventSource.register('src1', Src1);
+      var Src1 = class extends Source {};
+      Source.register('src1', Src1);
       var parsed = dsl.parseSource('xyz', {type: 'src1'});
       expect(parsed.name).toBe('xyz');
     });

@@ -1,11 +1,11 @@
 'use strict';
 
-let EventSource = require('../src/EventSource');
+let Source = require('../src/Source');
 
-describe('EventSource', function() {
+describe('Source', function() {
 
   beforeEach(function(){
-    delete EventSource.registry;
+    delete Source.registry;
   });
 
   describe('extends', function() {
@@ -16,9 +16,9 @@ describe('EventSource', function() {
         return now;
       };
 
-      let SrcClass = EventSource.extend({ listen: fn });
+      let SrcClass = Source.extend({ listen: fn });
       let src = new SrcClass();
-      expect(src instanceof EventSource).toBe(true);
+      expect(src instanceof Source).toBe(true);
 
       expect(src.listen()).toBe(now);
     });
@@ -33,41 +33,41 @@ describe('EventSource', function() {
         return now;
       };
 
-      let src = EventSource.create({ listen: fn });
-      expect(src instanceof EventSource).toBe(true);
+      let src = Source.create({ listen: fn });
+      expect(src instanceof Source).toBe(true);
       expect(src.listen()).toBe(now);
     });
 
     it('creates a registered source', function() {
-      class Src extends EventSource {}
-      EventSource.register('src', Src);
-      let src = EventSource.create('src');
+      class Src extends Source {}
+      Source.register('src', Src);
+      let src = Source.create('src');
       expect(src instanceof Src).toBe(true);
     });
 
     it('does not create a source not registered', function() {
-      let src = EventSource.create('src');
+      let src = Source.create('src');
       expect(src).toBe(null);
     });
 
     it('always sets config to empty object if config is not passed', function() {
-      class Src extends EventSource {}
-      EventSource.register('src', Src);
-      let src = EventSource.create('src');
+      class Src extends Source {}
+      Source.register('src', Src);
+      let src = Source.create('src');
       expect(src.config).toEqual({});
     });
 
     it('passes config to created instance', function() {
-      class Src extends EventSource {}
-      EventSource.register('src', Src);
-      let src = EventSource.create('src', 'name', {x: 5});
+      class Src extends Source {}
+      Source.register('src', Src);
+      let src = Source.create('src', 'name', {x: 5});
       expect(src.config).toEqual({x: 5});
     });
 
     it('passes name to created instance', function() {
-      class Src extends EventSource {}
-      EventSource.register('src', Src);
-      let src = EventSource.create('src', 'xyz', {x: 5});
+      class Src extends Source {}
+      Source.register('src', Src);
+      let src = Source.create('src', 'xyz', {x: 5});
       expect(src.name).toEqual('xyz');
     });
   });
@@ -76,10 +76,10 @@ describe('EventSource', function() {
 
     it('registers a new source', function() {
       let fn = function() {};
-      EventSource.register('newEventSource', fn);
-      expect(EventSource.registry).toBeDefined();
-      if (EventSource.registry) {
-        expect(EventSource.registry.newEventSource).toBe(fn);
+      Source.register('newSource', fn);
+      expect(Source.registry).toBeDefined();
+      if (Source.registry) {
+        expect(Source.registry.newSource).toBe(fn);
       }
     });
 
@@ -89,16 +89,16 @@ describe('EventSource', function() {
 
     it('gets a registered source', function() {
       let fn = function() {};
-      EventSource.register('newEventSource', fn);
-      expect(EventSource.get('newEventSource')).toBe(fn);
+      Source.register('newSource', fn);
+      expect(Source.get('newSource')).toBe(fn);
     });
 
     it('does not throw and returns falsy on unregistered sources', function() {
       expect(function() {
-        EventSource.get('newEventSource');
+        Source.get('newSource');
       }).not.toThrow();
 
-      expect(EventSource.get('newEventSource')).toBeFalsy();
+      expect(Source.get('newSource')).toBeFalsy();
     });
 
   });
@@ -109,7 +109,7 @@ describe('EventSource', function() {
       let conf = {x: 5};
       let internalConf;
 
-      let Src = EventSource.extend({
+      let Src = Source.extend({
         listen: function() {
           internalConf = this.config;
         }

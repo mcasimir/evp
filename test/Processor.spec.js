@@ -1,9 +1,9 @@
 'use strict';
 
-var EventSource = require('../src/EventSource');
+var Source = require('../src/Source');
 var Command = require('../src/Command');
-var EventMapper = require('../src/EventMapper');
-var eventMapper = new EventMapper();
+var Processor = require('../src/Processor');
+var Processor = new Processor();
 
 class DummyCommand extends Command {
   run(event){
@@ -17,7 +17,7 @@ class ErrorCommand extends Command {
   }
 }
 
-class DummySource extends EventSource {
+class DummySource extends Source {
   listen() {
     this.event({
       time: (new Date()).getTime()
@@ -25,17 +25,17 @@ class DummySource extends EventSource {
   }
 }
 
-describe('EventMapper', function() {
+describe('Processor', function() {
 
   beforeEach(() => {
-    EventSource.register('dummySource', DummySource);
+    Source.register('dummySource', DummySource);
     Command.register('dummy', DummyCommand);
     Command.register('error', ErrorCommand);
   });
 
   describe('can be used very easily', function() {
     it('can hook up a source with a command', function(done) {
-      eventMapper.configure({
+      Processor.configure({
         dummySource: {
           type: 'dummySource',
           config: {},
@@ -45,9 +45,9 @@ describe('EventMapper', function() {
         }
       });
 
-      eventMapper.listen();
+      Processor.listen();
 
-      eventMapper.on('eventProcessed', (e) => {
+      Processor.on('eventProcessed', (e) => {
         expect(e.source.name).toEqual('dummySource');
         expect(e.result.time).toBeDefined();
         done();
@@ -55,7 +55,7 @@ describe('EventMapper', function() {
     });
 
     it('notifies about an event failure', function(done) {
-      eventMapper.configure({
+      Processor.configure({
         dummySource: {
           type: 'dummySource',
           config: {},
@@ -65,9 +65,9 @@ describe('EventMapper', function() {
         }
       });
 
-      eventMapper.listen();
+      Processor.listen();
 
-      eventMapper.on('eventProcessingError', (e) => {
+      Processor.on('eventProcessingError', (e) => {
         expect(e.source.name).toEqual('dummySource');
         done();
       });

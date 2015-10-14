@@ -7,18 +7,18 @@ var Inspect             = require('./commands/Inspect');
 var EventSource         = require('./EventSource');
 var Command             = require('./Command');
 
-EventMapper.registerCommand('transform', Transform);
-EventMapper.registerCommand('forward', Forward);
-EventMapper.registerCommand('inspect', Inspect);
+Command.register('transform', Transform);
+Command.register('forward', Forward);
+Command.register('inspect', Inspect);
 
 var evp = new EventMapper();
 
 evp.registerCommand = function(name, cmd) {
-  return EventMapper.registerCommand(name, cmd);
+  return Command.register(name, cmd);
 };
 
-evp.registerEventSource = function(name, src) {
-  return EventMapper.registerEventSource(name, src);
+evp.registerSource = function(name, src) {
+  return EventSource.register(name, src);
 };
 
 evp.EventSource = EventSource;

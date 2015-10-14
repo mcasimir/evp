@@ -28,9 +28,9 @@ class DummySource extends EventSource {
 describe('EventMapper', function() {
 
   beforeEach(() => {
-    EventMapper.registerEventSource('dummySource', DummySource);
-    EventMapper.registerCommand('dummy', DummyCommand);
-    EventMapper.registerCommand('error', ErrorCommand);
+    EventSource.register('dummySource', DummySource);
+    Command.register('dummy', DummyCommand);
+    Command.register('error', ErrorCommand);
   });
 
   describe('can be used very easily', function() {
@@ -39,9 +39,9 @@ describe('EventMapper', function() {
         dummySource: {
           type: 'dummySource',
           config: {},
-          process: {
-            dummy: {}
-          }
+          process: [
+            {dummy: {}}
+          ]
         }
       });
 
@@ -59,9 +59,9 @@ describe('EventMapper', function() {
         dummySource: {
           type: 'dummySource',
           config: {},
-          process: {
-            error: {}
-          }
+          process: [
+            {error: {}}
+          ]
         }
       });
 

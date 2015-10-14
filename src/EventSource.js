@@ -29,15 +29,15 @@ class EventSource extends EventEmitter {
     };
   }
 
-  static createFromObj(obj, config) {
+  static createFromObj(obj, name, config) {
     obj = obj || {};
-    return new (this.extend(obj))(config);
+    return new (this.extend(obj))(name, config);
   }
 
-  static createFromRegistry(type, config) {
+  static createFromRegistry(type, name, config) {
     var Cls = this.get(type);
     if (Cls) {
-      return new Cls(config);
+      return new Cls(name, config);
     } else {
       return null;
     }
@@ -54,7 +54,7 @@ class EventSource extends EventEmitter {
   constructor(name, config) {
     super();
     this.name    = name;
-    this.config  = config;
+    this.config  = config || {};
     this.pipelines = [];
   }
 

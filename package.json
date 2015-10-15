@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "JSONPath": "^0.10.0",
+    "angular-expressions": "^0.3.0",
     "jsonpath-object-transform": "^1.0.4",
     "lodash": "^3.10.1",
     "request": "^2.65.0"

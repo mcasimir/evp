@@ -5,7 +5,6 @@ var Command             = require('../Command');
 var JsonDsl             = require('../dsl/JsonDsl');
 var evpParser           = new JsonDsl();
 
-
 class Switch extends Command {
 
   constructor(config) {

@@ -4,7 +4,7 @@
   "description": "Event Pipeline Processor for node.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
@@ -20,16 +20,19 @@
   },
   "homepage": "https://github.com/mcasimir/evp#readme",
   "devDependencies": {
+    "depcheck": "^0.4.7",
     "glob": "^5.0.15",
     "gulp": "^3.9.0",
     "gulp-jasmine": "^2.0.1",
     "gulp-jscs": "^3.0.1",
     "gulp-jshint": "^1.11.2",
     "gulp-release-tasks": "0.0.3",
+    "gulp-sequence": "^0.4.1",
+    "gulp-util": "^3.0.6",
     "nock": "^2.10.0"
   },
   "dependencies": {
-    "JSONPath": "^0.10.0",
+    "angular-expressions": "^0.3.0",
     "jsonpath-object-transform": "^1.0.4",
     "lodash": "^3.10.1",
     "request": "^2.65.0"

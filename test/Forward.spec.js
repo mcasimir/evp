@@ -1,14 +1,14 @@
 'use strict';
 
-var nock = require('nock');
-var Forward = require('../src/commands/Forward');
+let nock = require('nock');
+let Forward = require('../src/commands/Forward');
 
 describe('Forward', function() {
 
   describe('run', function() {
     it('should issue a POST http call passing stringifyied event as body', function(done) {
 
-      var event = {
+      let event = {
         a: 1,
         b: 2
       };
@@ -16,12 +16,12 @@ describe('Forward', function() {
       nock('http://test.example.com')
           .post('/x/y')
           .reply(200, function(uri, body){
-            var received = JSON.parse(body);
+            let received = JSON.parse(body);
             expect(received).toEqual(event);
             done();
           });
 
-      var forward = new Forward({
+      let forward = new Forward({
         uri: 'http://test.example.com/x/y'
       });
 

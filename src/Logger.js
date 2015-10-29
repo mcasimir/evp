@@ -1,10 +1,9 @@
 'use strict';
 
-var winston   = require('winston');
-var flyWeight = {};
-var inspect   = require('util').inspect;
+let winston   = require('winston');
+let inspect   = require('util').inspect;
 
-var globalLogger = {
+let globalLogger = {
   winston: winston,
   log: function(level, message, metadata) {
     message = typeof message === 'string' ? message : inspect(message, { depth: null });
@@ -18,19 +17,12 @@ module.exports = {
     return globalLogger;
   },
 
-  getLoggerFor: function(component) {
-    if (!flyWeight[component]) {
-      flyWeight[component] = {
-        log: function(level, message, metadata) {
-          return globalLogger.log(level, `[${component}]  ${message}`, metadata);
-        }
-      };
-    }
-    return flyWeight[component];
-  },
-
   log: function(level, message, metadata) {
     return globalLogger.log(level, message, metadata);
+  },
+
+  logAs: function(component, level, message, metadata) {
+    return globalLogger.log(level, `[${component}] ${message}`.trim(), metadata);
   }
 
 };

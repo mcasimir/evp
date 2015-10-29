@@ -1,9 +1,9 @@
 'use strict';
 
-var request   = require('request');
-var _         = require('lodash');
+let request   = require('request');
+let _         = require('lodash');
 
-var Command   = require('../Command');
+let Command   = require('../Command');
 
 class Forward extends Command {
 

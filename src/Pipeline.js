@@ -1,26 +1,33 @@
 'use strict';
 
-var _ = require('lodash');
-var waterfall = require('./utils/waterfall');
-var shortid = require('shortid');
-var Logger  = require('./Logger');
+let _             = require('lodash');
+let waterfall     = require('./utils/waterfall');
+let generateId    = require('./utils/generateId');
+let Logger        = require('./Logger');
 
 class Pipeline {
 
   constructor(commands, name, id) {
-    this.id         = id || shortid.generate();
-    this.name       = name || this.constructor.name;
-    this.uniqueName = [name, id].join('#');
-    this.logger     = Logger.getLoggerFor(this.uniqueName);
+    this.id         = id || generateId();
+    this.name       = name || this.constructor.name || 'Pipeline';
+    this.uniqueName = [this.name, this.id].join('#');
+    this.logger     = Logger;
     this.source     = null;
     this.commands   = [];
-    commands.forEach((command) => {
+    (commands || []).forEach((command) => {
       this.addCommand(command);
     });
   }
 
-  log() {
-    return this.logger.log.apply(this.logger, arguments);
+  log(level, message, metadata) {
+    return this.logger.logAs(this.getLogPrompt(), level, message, metadata);
+  }
+
+  getLogPrompt() {
+    let source   = this.getSource();
+    return [ source && source.name, this.uniqueName ].filter(function(segment) {
+      return segment;
+    }).join('.');
   }
 
   addCommand(command) {
@@ -29,7 +36,7 @@ class Pipeline {
   }
 
   run(event){
-    var fns = _.map(this.commands, function(command){
+    let fns = _.map(this.commands, function(command){
       return _.bind(command.pipe, command);
     });
     return waterfall(fns, event);
@@ -39,6 +46,9 @@ class Pipeline {
     this.source = source;
   }
 
+  getSource() {
+    return this.source;
+  }
 }
 
 module.exports = Pipeline;

@@ -1,11 +1,11 @@
 'use strict';
 
-var evp = require('../src/evp');
-var Processor = require('../src/Processor');
-var Command = require('../src/Command');
-var Source = require('../src/Source');
-// var glob = require('glob');
-// var path = require('path');
+let evp = require('../src/evp');
+let Processor = require('../src/Processor');
+let Command = require('../src/Command');
+let Source = require('../src/Source');
+// let glob = require('glob');
+// let path = require('path');
 
 describe('evp', function() {
   beforeEach(function() {
@@ -40,7 +40,7 @@ describe('evp', function() {
   xit('should make all the defined commands available', function() {
     // glob(path.resolve(__dirname, '../src/commands/*.js'), {nonull: false, nodir: true}, function (er, files) {
     //   files.forEach(function(file) {
-    //     var className = path.basename(file, '.js');
+    //     let className = path.basename(file, '.js');
     //   });
     //   done();
     // });

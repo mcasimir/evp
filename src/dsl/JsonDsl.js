@@ -1,20 +1,20 @@
 'use strict';
 
-var _             = require('lodash');
-var Command       = require('../Command');
-var Source        = require('../Source');
-var Pipeline      = require('../Pipeline');
-var JsonDslError  = require('./JsonDslError');
+let _             = require('lodash');
+let Command       = require('../Command');
+let Source        = require('../Source');
+let Pipeline      = require('../Pipeline');
+let JsonDslError  = require('./JsonDslError');
 
 class JsonDsl {
   constructor() {}
 
   parseCommand(def) {
-    var pair = this.parsePair(def);
-    var name = pair.key;
-    var config = pair.value;
+    let pair = this.parsePair(def);
+    let name = pair.key;
+    let config = pair.value;
 
-    var cmd = Command.create(name, config);
+    let cmd = Command.create(name, config);
 
     if (!cmd) {
       throw new JsonDslError(`Unable to find a Command for type ${name}`);
@@ -35,7 +35,7 @@ class JsonDsl {
   }
 
   parseSource(name, definition) {
-    var source = Source.create(definition.type, name, definition.config);
+    let source = Source.create(definition.type, name, definition.config);
     if (!source) {
       throw new JsonDslError(`Unable to find an Source for type ${definition.type}`);
     }
@@ -46,7 +46,7 @@ class JsonDsl {
 
   parsePair(obj) {
     obj = obj || {};
-    var pair = _.pairs(obj)[0];
+    let pair = _.pairs(obj)[0];
     if (pair) {
       return {
         key: pair[0],
@@ -56,7 +56,7 @@ class JsonDsl {
   }
 
   parse(tree) {
-    var sources = {};
+    let sources = {};
     tree = tree || {};
     _.each(tree, (sourceConf, sourceName) => {
       sources[sourceName] = this.parseSource(sourceName, sourceConf);

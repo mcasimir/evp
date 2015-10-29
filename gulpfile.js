@@ -1,11 +1,11 @@
 'use strict';
 
-var gulp      = require('gulp');
-var jasmine   = require('gulp-jasmine');
-var jshint    = require('gulp-jshint');
-var jscs      = require('gulp-jscs');
-var seq       = require('gulp-sequence');
-var depcheck  = require('gulp-depcheck');
+let gulp      = require('gulp');
+let jasmine   = require('gulp-jasmine');
+let jshint    = require('gulp-jshint');
+let jscs      = require('gulp-jscs');
+let seq       = require('gulp-sequence');
+let depcheck  = require('gulp-depcheck');
 
 require('gulp-release-tasks')(gulp);
 

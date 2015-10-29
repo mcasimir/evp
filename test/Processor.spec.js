@@ -1,8 +1,8 @@
 'use strict';
 
-var Source    = require('../src/Source');
-var Command   = require('../src/Command');
-var Processor = require('../src/Processor');
+let Source    = require('../src/Source');
+let Command   = require('../src/Command');
+let Processor = require('../src/Processor');
 
 class DummyCommand extends Command {
   run(event){

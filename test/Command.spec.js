@@ -1,12 +1,24 @@
 'use strict';
 
-let Command = require('../src/Command');
+let Command  = require('../src/Command');
+let Source   = require('../src/Source');
+let Pipeline = require('../src/Pipeline');
+let Logger   = require('../src/Logger');
+let winston  = Logger.getGlobalLogger().winston;
 
 describe('Command', function() {
 
   describe('constructor', function(){
     it('sets configuration to {} as default', function() {
       expect((new Command()).config).toEqual({});
+    });
+
+    it('sets name after command constructor name by default', function(){
+      expect((new Command()).name).toEqual('Command');
+    });
+
+    it('sets an id if none provided by default', function(){
+      expect((new Command()).id).toBeTruthy();
     });
   });
 
@@ -113,6 +125,44 @@ describe('Command', function() {
       cmd.run();
       expect(internalConf).toBe(conf);
     });
+
+    it('should be able to log', function () {
+      spyOn(winston, 'log');
+
+      let Cmd = Command.extend({
+        run: function() {
+          this.log('info', 'message');
+        }
+      });
+
+      let cmd = new Cmd({});
+      cmd.run();
+      expect(winston.log).toHaveBeenCalled();
+    });
+
+    it('should log command path', function () {
+      spyOn(winston, 'log');
+
+      let Src = Source.extend({
+        listen: function() {}
+      });
+
+      let src = new Src('src1', {});
+      let pipeline = new Pipeline();
+      let cmd = Command.create({
+        run: function(){
+          this.log('info', 'message');
+        }
+      });
+
+      src.addPipeline(pipeline);
+
+      pipeline.addCommand(cmd);
+
+      cmd.run();
+      let lastCall = winston.log.calls.first();
+      expect(lastCall.args[1]).toMatch(/\[src1\.Pipeline#\d+\-\d+\.Command#\d+\-\d+\] message/);
+    });
   });
 
   describe('pipe', function() {
@@ -165,5 +215,35 @@ describe('Command', function() {
         expect(res).toBe(false);
       });
     });
+  });
+
+  describe('getSource', function() {
+
+    it('should retrieve a source once it is set', function() {
+      let Src = Source.extend({
+        listen: function() {}
+      });
+
+      let src = new Src('src', {});
+      let pipeline = new Pipeline();
+      let cmd = Command.create({
+        run: function(){}
+      });
+
+      src.addPipeline(pipeline);
+
+      pipeline.addCommand(cmd);
+
+      expect(cmd.getSource()).toBe(src);
+    });
+
+    it('should return falsy if pipeline is not set', function() {
+      let cmd = Command.create({
+        run: function(){}
+      });
+
+      expect(cmd.getSource()).toBeFalsy();
+    });
+
   });
 });

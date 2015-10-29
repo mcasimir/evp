@@ -1,11 +1,11 @@
 'use strict';
 
-var Command   = require('../Command');
+let Command   = require('../Command');
 
 class Log extends Command {
 
   run(event){
-    var meta = { timestamp: (new Date()).toISOString() };
+    let meta = { timestamp: (new Date()).toISOString() };
 
     if (!this.config.skipEvent) {
       meta.event = event;

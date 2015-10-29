@@ -35,7 +35,6 @@
     "jsonpath-object-transform": "^1.0.4",
     "lodash": "^3.10.1",
     "request": "^2.65.0",
-    "shortid": "^2.2.4",
     "winston": "^1.1.2"
   }
 }

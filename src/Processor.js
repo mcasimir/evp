@@ -1,9 +1,9 @@
 'use strict';
 
-var _            = require('lodash');
-var JsonDsl      = require('./dsl/JsonDsl');
-var EventEmitter = require('events');
-var Logger       = require('./Logger');
+let _            = require('lodash');
+let JsonDsl      = require('./dsl/JsonDsl');
+let EventEmitter = require('events');
+let Logger       = require('./Logger');
 
 class Processor extends EventEmitter {
 
@@ -25,7 +25,7 @@ class Processor extends EventEmitter {
   }
 
   listen() {
-    var promises = _.map(this.sources, (source) => {
+    let promises = _.map(this.sources, (source) => {
 
       source.on('eventProcessed', (evt) => {
         this.emit('eventProcessed', evt);

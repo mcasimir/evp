@@ -1,15 +1,15 @@
 'use strict';
 
-var waterfall = require('../src/utils/waterfall');
+let waterfall = require('../src/utils/waterfall');
 
 describe('waterfall', function() {
   it('should run all the funcs in sequence', function(done) {
 
-    var fn1 = function(x){
+    let fn1 = function(x){
       return Promise.resolve(x + 1);
     };
 
-    var fn2 = function(x){
+    let fn2 = function(x){
       return Promise.resolve(x * 2);
     };
 

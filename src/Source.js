@@ -1,6 +1,7 @@
 'use strict';
 
-var EventEmitter = require('events');
+let EventEmitter = require('events');
+let Logger     = require('./Logger');
 
 class Source extends EventEmitter {
 
@@ -35,7 +36,7 @@ class Source extends EventEmitter {
   }
 
   static createFromRegistry(type, name, config) {
-    var Cls = this.get(type);
+    let Cls = this.get(type);
     if (Cls) {
       return new Cls(name, config);
     } else {
@@ -55,13 +56,14 @@ class Source extends EventEmitter {
     super();
     this.name    = name;
     this.config  = config || {};
+    this.logger  = Logger;
     this.pipelines = [];
   }
 
   event(event) {
     this.emit('event', event);
 
-    var pipelinePromises = this.pipelines.map((pipeline) => {
+    let pipelinePromises = this.pipelines.map((pipeline) => {
       return pipeline.run(event)
         .then((result) => {
           this.emit('eventProcessed', {source: this, result: result});
@@ -76,8 +78,8 @@ class Source extends EventEmitter {
     return Promise.all(pipelinePromises);
   }
 
-  log() {
-    return this.logger.log.apply(this.logger, arguments);
+  log(level, message, metadata) {
+    return this.logger.logAs(this.name, level, message, metadata);
   }
 
   addPipeline(pipeline) {

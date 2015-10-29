@@ -1,7 +1,7 @@
 'use strict';
 
-var transform = require('../utils/jsonTransform');
-var Command   = require('../Command');
+let transform = require('../utils/jsonTransform');
+let Command   = require('../Command');
 
 class Transform extends Command {
 

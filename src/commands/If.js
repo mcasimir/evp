@@ -1,16 +1,16 @@
 'use strict';
 
-var Command             = require('../Command');
-var JsonDsl             = require('../dsl/JsonDsl');
-var expressions         = require('angular-expressions');
-var evpParser           = new JsonDsl();
+let Command             = require('../Command');
+let JsonDsl             = require('../dsl/JsonDsl');
+let expressions         = require('angular-expressions');
+let evpParser           = new JsonDsl();
 
 class If extends Command {
 
   constructor(config) {
     super(config);
 
-    var branchConfig = evpParser.parsePair(config || {});
+    let branchConfig = evpParser.parsePair(config || {});
 
     if (branchConfig) {
       this.branch = {

@@ -1,7 +1,7 @@
 'use strict';
 
-var Logger        = require('./Logger');
-var shortid       = require('shortid');
+let Logger        = require('./Logger');
+let generateId    = require('./utils/generateId');
 
 class Command {
 
@@ -36,7 +36,7 @@ class Command {
   }
 
   static createFromRegistry(name, config) {
-    var Cls = this.get(name);
+    let Cls = this.get(name);
     if (Cls) {
       return new Cls(config, name);
     } else {
@@ -54,15 +54,23 @@ class Command {
 
   constructor(config, name, id) {
     this.config = config || {};
-    this.id         = id || shortid.generate();
-    this.name       = name || this.constructor.name;
-    this.uniqueName = [name, id].join('#');
-    this.logger     = Logger.getLoggerFor(this.uniqueName);
+    this.id         = id || generateId();
+    this.name       = name || this.constructor.name || 'Command';
+    this.uniqueName = [this.name, this.id].join('#');
+    this.logger     = Logger;
     this.pipeline   = null;
   }
 
-  log() {
-    return this.logger.log.apply(this.logger, arguments);
+  log(level, message, metadata) {
+    return this.logger.logAs(this.getLogPrompt(), level, message, metadata);
+  }
+
+  getLogPrompt() {
+    let pipeline = this.getPipeline();
+    let source   = this.getSource();
+    return [ source && source.name,  pipeline && pipeline.uniqueName, this.uniqueName ].filter(function(segment) {
+      return segment;
+    }).join('.');
   }
 
   setPipeline(pipeline) {
@@ -75,6 +83,11 @@ class Command {
 
   getSource() {
     return this.pipeline && this.pipeline.getSource();
+  }
+
+  getSourceName() {
+    let src = this.getSource();
+    return src && src.name;
   }
 
   /**

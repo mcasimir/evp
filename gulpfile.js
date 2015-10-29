@@ -1,17 +1,20 @@
 'use strict';
 
-let gulp      = require('gulp');
-let jasmine   = require('gulp-jasmine');
-let jshint    = require('gulp-jshint');
-let jscs      = require('gulp-jscs');
-let seq       = require('gulp-sequence');
-let depcheck  = require('gulp-depcheck');
+let gulp          = require('gulp-help')(require('gulp'));
+let jasmine       = require('gulp-jasmine');
+let SpecReporter  = require('jasmine-spec-reporter');
+let jshint        = require('gulp-jshint');
+let jscs          = require('gulp-jscs');
+let seq           = require('gulp-sequence');
+let depcheck      = require('gulp-depcheck');
 
 require('gulp-release-tasks')(gulp);
 
 gulp.task('test', function () {
   return gulp.src(['test/**/*.spec.js'])
-        .pipe(jasmine());
+        .pipe(jasmine({
+          reporter: new SpecReporter()
+        }));
 });
 
 gulp.task('jscs', function() {
@@ -42,6 +45,5 @@ gulp.task('depcheck', depcheck({
     'node_modules',
     'bower_components',
     'docs'
-  ],
-  ignoreMatches: ['glob']
+  ]
 }));

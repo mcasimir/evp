@@ -9,7 +9,14 @@ let winston  = Logger.getGlobalLogger().winston;
 describe('Source', function() {
 
   beforeEach(function(){
+    this.commandRegistryBackup  = Object.assign({}, Command.registry);
+    this.sourceRegistryBackup   = Object.assign({}, Source.registry);
     delete Source.registry;
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+    Source.registry = this.soucreRegistryBackup;
   });
 
   describe('extends', function() {

@@ -36,9 +36,9 @@ class Command {
   }
 
   static createFromRegistry(name, config) {
-    let Cls = this.get(name);
-    if (Cls) {
-      return new Cls(config, name);
+    let CommandClass = this.get(name);
+    if (CommandClass) {
+      return new CommandClass(config, name);
     } else {
       return null;
     }
@@ -56,7 +56,7 @@ class Command {
     this.config = config || {};
     this.id         = id || generateId();
     this.name       = name || this.constructor.name || 'Command';
-    this.uniqueName = [this.name, this.id].join('#');
+    this.uniqueName = `${this.name}#${this.id}`;
     this.logger     = Logger;
     this.pipeline   = null;
   }

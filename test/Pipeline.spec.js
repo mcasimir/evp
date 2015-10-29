@@ -4,9 +4,12 @@ let Pipeline = require('../src/Pipeline');
 let Command = require('../src/Command');
 
 describe('Pipeline', function() {
+
   let cmd1, cmd2, discard, runned;
 
   beforeEach(function() {
+    this.commandRegistryBackup  = Command.registry;
+
     runned = [];
 
     discard = Command.create({
@@ -26,6 +29,10 @@ describe('Pipeline', function() {
         runned.push('cmd2');
         return Promise.resolve(evt);
       }});
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
   });
 
   describe('constructor', function(){

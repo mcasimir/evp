@@ -8,15 +8,21 @@ let config = {
 
 describe('If', function() {
 
-  describe('run', function() {
+  beforeEach(function() {
+    this.commandRegistryBackup  = Object.assign({}, Command.registry);
 
-    beforeEach(function() {
-      Command.register('emit', Command.extend({
-        run: function() {
-          return this.config;
-        }
-      }));
-    });
+    Command.register('emit', Command.extend({
+      run: function() {
+        return this.config;
+      }
+    }));
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+  });
+
+  describe('run', function() {
 
     it('should apply sub-pipelines if condition evaluates to true', function(done) {
 

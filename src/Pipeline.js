@@ -10,7 +10,7 @@ class Pipeline {
   constructor(commands, name, id) {
     this.id         = id || generateId();
     this.name       = name || this.constructor.name || 'Pipeline';
-    this.uniqueName = [this.name, this.id].join('#');
+    this.uniqueName = `${this.name}#${this.id}`;
     this.logger     = Logger;
     this.source     = null;
     this.commands   = [];

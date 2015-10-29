@@ -24,7 +24,11 @@ class JsonDsl {
 
   parsePipeline(cmds) {
     if (_.isObject(cmds) && !Array.isArray(cmds)) {
-      cmds = [cmds];
+      cmds = _.pairs(cmds).map(function(pair){
+        let commandObject = {};
+        commandObject[pair[0]] = pair[1];
+        return commandObject;
+      });
     } else if (!Array.isArray(cmds)) {
       cmds = [];
     }

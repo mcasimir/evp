@@ -9,6 +9,8 @@ describe('Log', function() {
   describe('run', function() {
 
     it('should pass through the original event untouched', function(done) {
+      spyOn(winston, 'log'); // silence winston
+
       let event = {
         a: {
           b: {

@@ -8,6 +8,16 @@ let winston  = Logger.getGlobalLogger().winston;
 
 describe('Command', function() {
 
+  beforeEach(function() {
+    this.commandRegistryBackup  = Object.assign({}, Command.registry);
+    this.sourceRegistryBackup   = Object.assign({}, Source.registry);
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+    Source.registry = this.soucreRegistryBackup;
+  });
+
   describe('constructor', function(){
     it('sets configuration to {} as default', function() {
       expect((new Command()).config).toEqual({});
@@ -29,8 +39,8 @@ describe('Command', function() {
         return now;
       };
 
-      let CmdClass = Command.extend({ run: fn });
-      let cmd = new CmdClass();
+      let CommandClass = Command.extend({ run: fn });
+      let cmd = new CommandClass();
       expect(cmd instanceof Command).toBe(true);
 
       expect(cmd.run()).toBe(now);
@@ -81,11 +91,11 @@ describe('Command', function() {
     });
 
     it('registers a new command', function() {
-      let cls = function() {};
-      Command.register('newCommand', cls);
+      let CommandClass = function() {};
+      Command.register('newCommand', CommandClass);
       expect(Command.registry).toBeDefined();
       if (Command.registry) {
-        expect(Command.registry.newCommand).toBe(cls);
+        expect(Command.registry.newCommand).toBe(CommandClass);
       }
     });
   });

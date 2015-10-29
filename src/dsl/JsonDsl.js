@@ -39,7 +39,7 @@ class JsonDsl {
     if (!source) {
       throw new JsonDslError(`Unable to find an Source for type ${definition.type}`);
     }
-    source.addPipeline(this.parsePipeline(definition.process));
+    source.setPipeline(this.parsePipeline(definition.process));
 
     return source;
   }

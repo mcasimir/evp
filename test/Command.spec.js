@@ -155,7 +155,7 @@ describe('Command', function() {
         }
       });
 
-      src.addPipeline(pipeline);
+      src.setPipeline(pipeline);
 
       pipeline.addCommand(cmd);
 
@@ -230,7 +230,7 @@ describe('Command', function() {
         run: function(){}
       });
 
-      src.addPipeline(pipeline);
+      src.setPipeline(pipeline);
 
       pipeline.addCommand(cmd);
 

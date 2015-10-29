@@ -2,6 +2,7 @@
 
 let EventEmitter = require('events');
 let Logger     = require('./Logger');
+let Pipeline   = require('./Pipeline');
 
 class Source extends EventEmitter {
 
@@ -54,37 +55,37 @@ class Source extends EventEmitter {
 
   constructor(name, config) {
     super();
-    this.name    = name;
-    this.config  = config || {};
-    this.logger  = Logger;
-    this.pipelines = [];
+    this.name     = name;
+    this.config   = config || {};
+    this.logger   = Logger;
+    this.pipeline = new Pipeline([], 'NullPipeline');
   }
 
   event(event) {
     this.emit('event', event);
 
-    let pipelinePromises = this.pipelines.map((pipeline) => {
-      return pipeline.run(event)
-        .then((result) => {
-          this.emit('eventProcessed', {source: this, result: result});
-          return result;
-        })
-        .catch((error) => {
-          this.emit('eventProcessingError', {source: this, error: error});
-          return error;
-        });
-    });
-
-    return Promise.all(pipelinePromises);
+    return this.pipeline.run(event)
+      .then((result) => {
+        this.emit('eventProcessed', {source: this, result: result});
+        return result;
+      })
+      .catch((error) => {
+        this.emit('eventProcessingError', {source: this, error: error});
+        return Promise.reject(error);
+      });
   }
 
   log(level, message, metadata) {
     return this.logger.logAs(this.name, level, message, metadata);
   }
 
-  addPipeline(pipeline) {
+  setPipeline(pipeline) {
     pipeline.setSource(this);
-    this.pipelines.push(pipeline);
+    this.pipeline = pipeline;
+  }
+
+  getPipeline() {
+    return this.pipeline;
   }
 
   /**

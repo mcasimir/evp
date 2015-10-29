@@ -1,5 +1,8 @@
 'use strict';
 
+let Logger        = require('./Logger');
+let generateId    = require('./utils/generateId');
+
 class Command {
 
   static _registryGetSet(name, value) {
@@ -33,9 +36,9 @@ class Command {
   }
 
   static createFromRegistry(name, config) {
-    var Cls = this.get(name);
-    if (Cls) {
-      return new Cls(config);
+    let CommandClass = this.get(name);
+    if (CommandClass) {
+      return new CommandClass(config, name);
     } else {
       return null;
     }
@@ -49,8 +52,42 @@ class Command {
     }
   }
 
-  constructor(config) {
+  constructor(config, name, id) {
     this.config = config || {};
+    this.id         = id || generateId();
+    this.name       = name || this.constructor.name || 'Command';
+    this.uniqueName = `${this.name}#${this.id}`;
+    this.logger     = Logger;
+    this.pipeline   = null;
+  }
+
+  log(level, message, metadata) {
+    return this.logger.logAs(this.getLogPrompt(), level, message, metadata);
+  }
+
+  getLogPrompt() {
+    let pipeline = this.getPipeline();
+    let source   = this.getSource();
+    return [ source && source.name,  pipeline && pipeline.uniqueName, this.uniqueName ].filter(function(segment) {
+      return segment;
+    }).join('.');
+  }
+
+  setPipeline(pipeline) {
+    this.pipeline = pipeline;
+  }
+
+  getPipeline() {
+    return this.pipeline;
+  }
+
+  getSource() {
+    return this.pipeline && this.pipeline.getSource();
+  }
+
+  getSourceName() {
+    let src = this.getSource();
+    return src && src.name;
   }
 
   /**

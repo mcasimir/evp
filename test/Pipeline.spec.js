@@ -1,12 +1,15 @@
 'use strict';
 
-var Pipeline = require('../src/Pipeline');
-var Command = require('../src/Command');
+let Pipeline = require('../src/Pipeline');
+let Command = require('../src/Command');
 
 describe('Pipeline', function() {
-  var cmd1, cmd2, discard, runned;
+
+  let cmd1, cmd2, discard, runned;
 
   beforeEach(function() {
+    this.commandRegistryBackup  = Command.registry;
+
     runned = [];
 
     discard = Command.create({
@@ -28,9 +31,29 @@ describe('Pipeline', function() {
       }});
   });
 
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+  });
+
+  describe('constructor', function(){
+    it('sets name after pipeline constructor name by default', function(){
+      expect((new Pipeline()).name).toEqual('Pipeline');
+    });
+
+    it('sets an id if none provided by default', function(){
+      expect((new Pipeline()).id).toBeTruthy();
+    });
+
+    it('has to setup itself as pipeline for commands', function() {
+      let pipeline = new Pipeline([cmd1, cmd2]);
+      expect(cmd1.getPipeline()).toBe(pipeline);
+      expect(cmd2.getPipeline()).toBe(pipeline);
+    });
+  });
+
   describe('run', function() {
     it('should run internal commands in sequence', function(done) {
-      var pipeline = new Pipeline([cmd1, cmd2]);
+      let pipeline = new Pipeline([cmd1, cmd2]);
       pipeline.run({}).then(function() {
         expect(runned).toEqual(['cmd1', 'cmd2']);
         done();
@@ -38,7 +61,7 @@ describe('Pipeline', function() {
     });
 
     it('should discard commands after one command emits false', function(done) {
-      var pipeline = new Pipeline([discard, cmd1, cmd2]);
+      let pipeline = new Pipeline([discard, cmd1, cmd2]);
       pipeline.run({}).then(function() {
         expect(runned).toEqual(['discard']);
         done();
@@ -46,7 +69,7 @@ describe('Pipeline', function() {
     });
 
     it('should run commands before one command emits false', function(done) {
-      var pipeline = new Pipeline([cmd1, discard, cmd2]);
+      let pipeline = new Pipeline([cmd1, discard, cmd2]);
       pipeline.run({}).then(function() {
         expect(runned).toEqual(['cmd1', 'discard']);
         done();

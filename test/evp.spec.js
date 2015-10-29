@@ -1,16 +1,24 @@
 'use strict';
 
-var evp = require('../src/evp');
-var Processor = require('../src/Processor');
-var Command = require('../src/Command');
-var Source = require('../src/Source');
-// var glob = require('glob');
-// var path = require('path');
+let evp       = require('../src/evp');
+let Processor = require('../src/Processor');
+let Command   = require('../src/Command');
+let Source    = require('../src/Source');
+let Logger    = require('../src/Logger');
+let JsonDsl   = require('../src/dsl/JsonDsl');
+let glob      = require('glob');
+let path      = require('path');
+let _         = require('lodash');
 
 describe('evp', function() {
   beforeEach(function() {
-    delete Command.registry;
-    delete Source.registry;
+    this.commandRegistryBackup  = Object.assign({}, Command.registry);
+    this.sourceRegistryBackup   = Object.assign({}, Source.registry);
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+    Source.registry = this.soucreRegistryBackup;
   });
 
   it('should be a Processor', function() {
@@ -25,6 +33,14 @@ describe('evp', function() {
     expect(evp.Source).toBe(Source);
   });
 
+  it('should expose logger', function() {
+    expect(evp.logger).toBe(Logger.getGlobalLogger());
+  });
+
+  it('should expose dsl', function() {
+    expect(evp.dsl instanceof JsonDsl).toBe(true);
+  });
+
   it('should allow to register a new Command with class', function() {
     class Cmd1 extends Command {}
     evp.registerCommand('cmd', Cmd1);
@@ -37,13 +53,22 @@ describe('evp', function() {
     expect(Source.get('src')).toBe(Src1);
   });
 
-  xit('should make all the defined commands available', function() {
-    // glob(path.resolve(__dirname, '../src/commands/*.js'), {nonull: false, nodir: true}, function (er, files) {
-    //   files.forEach(function(file) {
-    //     var className = path.basename(file, '.js');
-    //   });
-    //   done();
-    // });
+  it('should make all the defined commands available', function(done) {
+    Command.registry = this.commandRegistryBackup;
+    Source.registry = this.soucreRegistryBackup;
+
+    glob(path.resolve(__dirname, '../src/commands/*.js'), {nonull: false, nodir: true}, function (er, files) {
+      let definedCommands = files.map(function(file) {
+        return path.basename(file, '.js');
+      });
+
+      let availableCommands = _.values(evp.Command.registry).map(function(CommandClass){
+        return CommandClass.name;
+      });
+
+      expect(availableCommands).toEqual(definedCommands);
+      done();
+    });
   });
 
 });

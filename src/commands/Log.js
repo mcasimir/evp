@@ -1,30 +1,19 @@
 'use strict';
 
-var inspect = require('util').inspect;
-var Command   = require('../Command');
+let Command   = require('../Command');
 
 class Log extends Command {
 
   run(event){
-    var now    = (new Date());
-    var prompt = this.config.prompt;
-    var args = [];
+    let meta = { timestamp: (new Date()).toISOString() };
 
-    args.push(now.toISOString());
-
-    if (prompt) {
-      args.push(`[${prompt}]`);
+    if (!this.config.skipEvent) {
+      meta.event = event;
     }
 
-    args.push(inspect(event, { depth: this.config.depth }));
-
-    this._log.apply(this, args);
+    this.log(this.config.level || 'info', `${this.config.prompt|| ''}`, meta);
 
     return Promise.resolve(event);
-  }
-
-  _log() {
-    console.log.apply(console, arguments);
   }
 
 }

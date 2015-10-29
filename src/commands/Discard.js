@@ -1,6 +1,6 @@
 'use strict';
 
-var Command   = require('../Command');
+let Command   = require('../Command');
 
 class Discard extends Command {
   run(){

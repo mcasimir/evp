@@ -1,9 +1,9 @@
 'use strict';
 
-var expressions         = require('angular-expressions');
-var Command             = require('../Command');
-var JsonDsl             = require('../dsl/JsonDsl');
-var evpParser           = new JsonDsl();
+let expressions         = require('angular-expressions');
+let Command             = require('../Command');
+let JsonDsl             = require('../dsl/JsonDsl');
+let evpParser           = new JsonDsl();
 
 class Switch extends Command {
 
@@ -11,7 +11,7 @@ class Switch extends Command {
     super(config);
     this.tests = [];
 
-    for (var k in config) {
+    for (let k in config) {
       if (config.hasOwnProperty(k)) {
         this.tests.push({
           cond: expressions.compile('' + k),
@@ -22,7 +22,7 @@ class Switch extends Command {
   }
 
   run(event){
-    var promises = [];
+    let promises = [];
 
     this.tests.forEach(function(test) {
       if (test.cond && test.cond({ $: event })) {

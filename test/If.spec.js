@@ -1,26 +1,32 @@
 'use strict';
 
-var If = require('../src/commands/If');
-var Command = require('../src/Command');
-var config = {
+let If = require('../src/commands/If');
+let Command = require('../src/Command');
+let config = {
   '$.a': { emit: 'A' }
 };
 
 describe('If', function() {
 
-  describe('run', function() {
+  beforeEach(function() {
+    this.commandRegistryBackup  = Object.assign({}, Command.registry);
 
-    beforeEach(function() {
-      Command.register('emit', Command.extend({
-        run: function() {
-          return this.config;
-        }
-      }));
-    });
+    Command.register('emit', Command.extend({
+      run: function() {
+        return this.config;
+      }
+    }));
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+  });
+
+  describe('run', function() {
 
     it('should apply sub-pipelines if condition evaluates to true', function(done) {
 
-      var cmd = new If(config);
+      let cmd = new If(config);
 
       cmd.run({a: true}).then(function(res) {
         expect(res).toEqual('A');
@@ -31,7 +37,7 @@ describe('If', function() {
 
     it('should apply sub-pipelines if condition evaluates to false', function(done) {
 
-      var cmd = new If(config);
+      let cmd = new If(config);
 
       cmd.run({x: 5}).then(function(res) {
         expect(res).toEqual({x: 5});

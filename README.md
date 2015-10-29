@@ -89,7 +89,7 @@ commands implementation and extension:
 Source.register('mySourceName', MySource);
 Command.register('myCommandName', MyCommand);
 
-var Processor = new Processor();
+let Processor = new Processor();
 
 Processor.configure(config);
 Processor.listen();
@@ -139,7 +139,7 @@ NOTE: config for the Source will be available in `this.config`.
 ``` js
 class MailCommand extends Command {
   run(event){
-    var body = JSON.stringify(event, null, 2);
+    let body = JSON.stringify(event, null, 2);
     sendMail(this.config.recipient, body);
     return Promise.resolve(event); // forward to next
   }

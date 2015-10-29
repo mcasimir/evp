@@ -1,8 +1,8 @@
 'use strict';
 
-var Switch = require('../src/commands/Switch');
-var Command = require('../src/Command');
-var config = {
+let Switch = require('../src/commands/Switch');
+let Command = require('../src/Command');
+let config = {
   '$.a': [
     { emit: 'A' }
   ],
@@ -16,19 +16,25 @@ var config = {
 
 describe('Switch', function() {
 
-  describe('run', function() {
+  beforeEach(function() {
+    this.commandRegistryBackup  = Object.assign({}, Command.registry);
 
-    beforeEach(function() {
-      Command.register('emit', Command.extend({
-        run: function() {
-          return this.config;
-        }
-      }));
-    });
+    Command.register('emit', Command.extend({
+      run: function() {
+        return this.config;
+      }
+    }));
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+  });
+
+  describe('run', function() {
 
     it('should apply sub-pipelines depending on conditions 1', function(done) {
 
-      var cmd = new Switch(config);
+      let cmd = new Switch(config);
 
       cmd.run({a: true}).then(function(res) {
         expect(res).toEqual(['A']);
@@ -39,7 +45,7 @@ describe('Switch', function() {
 
     it('should apply sub-pipelines depending on conditions 2', function(done) {
 
-      var cmd = new Switch(config);
+      let cmd = new Switch(config);
 
       cmd.run({b: true}).then(function(res) {
         expect(res).toEqual(['B']);
@@ -50,7 +56,7 @@ describe('Switch', function() {
 
     it('should apply sub-pipelines depending on conditions 3', function(done) {
 
-      var cmd = new Switch(config);
+      let cmd = new Switch(config);
 
       cmd.run({c: true}).then(function(res) {
         expect(res).toEqual(['C']);
@@ -61,7 +67,7 @@ describe('Switch', function() {
 
     it('should not apply sub-pipelines if all conditions fails', function(done) {
 
-      var cmd = new Switch(config);
+      let cmd = new Switch(config);
 
       cmd.run({d: true}).then(function(res) {
         expect(res).toEqual([]);

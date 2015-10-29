@@ -1,13 +1,17 @@
 'use strict';
 
-var Log = require('../src/commands/Log');
+let Log     = require('../src/commands/Log');
+let Logger  = require('../src/Logger');
+let winston = Logger.getGlobalLogger().winston;
 
 describe('Log', function() {
 
   describe('run', function() {
 
     it('should pass through the original event untouched', function(done) {
-      var event = {
+      spyOn(winston, 'log'); // silence winston
+
+      let event = {
         a: {
           b: {
             c: 'OK'
@@ -15,9 +19,9 @@ describe('Log', function() {
         }
       };
 
-      var bkp = JSON.parse(JSON.stringify(event));
+      let bkp = JSON.parse(JSON.stringify(event));
 
-      var cmd = new Log();
+      let cmd = new Log();
 
       cmd.run(event).then(function(evt) {
         expect(evt).toEqual(bkp);
@@ -25,10 +29,10 @@ describe('Log', function() {
       });
     });
 
-    it('should call console.log', function(done) {
-      spyOn(console, 'log');
+    it('should call winston.log', function(done) {
+      spyOn(winston, 'log');
 
-      var event = {
+      let event = {
         a: {
           b: {
             c: 'OK'
@@ -36,10 +40,32 @@ describe('Log', function() {
         }
       };
 
-      var cmd = new Log();
+      let cmd = new Log();
 
       cmd.run(event).then(function() {
-        expect(console.log).toHaveBeenCalled();
+        expect(winston.log).toHaveBeenCalled();
+        done();
+      });
+    });
+
+    it('should call winston.log with right level', function(done) {
+      spyOn(winston, 'log');
+
+      let event = {
+        a: {
+          b: {
+            c: 'OK'
+          }
+        }
+      };
+
+      let cmd = new Log({
+        level: 'error'
+      });
+
+      cmd.run(event).then(function() {
+        let lastCall = winston.log.calls.first();
+        expect(lastCall.args[0]).toBe('error');
         done();
       });
     });

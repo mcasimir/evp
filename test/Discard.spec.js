@@ -1,12 +1,12 @@
 'use strict';
 
-var Discard = require('../src/commands/Discard');
+let Discard = require('../src/commands/Discard');
 
 describe('Discard', function() {
 
   describe('run', function() {
     it('should always return false', function(done) {
-      var event = {
+      let event = {
         a: {
           b: {
             c: 'OK'
@@ -14,7 +14,7 @@ describe('Discard', function() {
         }
       };
 
-      var cmd = new Discard();
+      let cmd = new Discard();
 
       cmd.run(event).then(function(evt) {
         expect(evt).toEqual(false);

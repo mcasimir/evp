@@ -1,12 +1,34 @@
 'use strict';
 
-let Command = require('../src/Command');
+let Command  = require('../src/Command');
+let Source   = require('../src/Source');
+let Pipeline = require('../src/Pipeline');
+let Logger   = require('../src/Logger');
+let winston  = Logger.getGlobalLogger().winston;
 
 describe('Command', function() {
+
+  beforeEach(function() {
+    this.commandRegistryBackup  = Object.assign({}, Command.registry);
+    this.sourceRegistryBackup   = Object.assign({}, Source.registry);
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+    Source.registry = this.soucreRegistryBackup;
+  });
 
   describe('constructor', function(){
     it('sets configuration to {} as default', function() {
       expect((new Command()).config).toEqual({});
+    });
+
+    it('sets name after command constructor name by default', function(){
+      expect((new Command()).name).toEqual('Command');
+    });
+
+    it('sets an id if none provided by default', function(){
+      expect((new Command()).id).toBeTruthy();
     });
   });
 
@@ -17,8 +39,8 @@ describe('Command', function() {
         return now;
       };
 
-      let CmdClass = Command.extend({ run: fn });
-      let cmd = new CmdClass();
+      let CommandClass = Command.extend({ run: fn });
+      let cmd = new CommandClass();
       expect(cmd instanceof Command).toBe(true);
 
       expect(cmd.run()).toBe(now);
@@ -69,11 +91,11 @@ describe('Command', function() {
     });
 
     it('registers a new command', function() {
-      let cls = function() {};
-      Command.register('newCommand', cls);
+      let CommandClass = function() {};
+      Command.register('newCommand', CommandClass);
       expect(Command.registry).toBeDefined();
       if (Command.registry) {
-        expect(Command.registry.newCommand).toBe(cls);
+        expect(Command.registry.newCommand).toBe(CommandClass);
       }
     });
   });
@@ -112,6 +134,44 @@ describe('Command', function() {
       let cmd = new Cmd(conf);
       cmd.run();
       expect(internalConf).toBe(conf);
+    });
+
+    it('should be able to log', function () {
+      spyOn(winston, 'log');
+
+      let Cmd = Command.extend({
+        run: function() {
+          this.log('info', 'message');
+        }
+      });
+
+      let cmd = new Cmd({});
+      cmd.run();
+      expect(winston.log).toHaveBeenCalled();
+    });
+
+    it('should log command path', function () {
+      spyOn(winston, 'log');
+
+      let Src = Source.extend({
+        listen: function() {}
+      });
+
+      let src = new Src('src1', {});
+      let pipeline = new Pipeline();
+      let cmd = Command.create({
+        run: function(){
+          this.log('info', 'message');
+        }
+      });
+
+      src.setPipeline(pipeline);
+
+      pipeline.addCommand(cmd);
+
+      cmd.run();
+      let lastCall = winston.log.calls.first();
+      expect(lastCall.args[1]).toMatch(/\[src1\.Pipeline#\d+\-\d+\.Command#\d+\-\d+\] message/);
     });
   });
 
@@ -165,5 +225,35 @@ describe('Command', function() {
         expect(res).toBe(false);
       });
     });
+  });
+
+  describe('getSource', function() {
+
+    it('should retrieve a source once it is set', function() {
+      let Src = Source.extend({
+        listen: function() {}
+      });
+
+      let src = new Src('src', {});
+      let pipeline = new Pipeline();
+      let cmd = Command.create({
+        run: function(){}
+      });
+
+      src.setPipeline(pipeline);
+
+      pipeline.addCommand(cmd);
+
+      expect(cmd.getSource()).toBe(src);
+    });
+
+    it('should return falsy if pipeline is not set', function() {
+      let cmd = Command.create({
+        run: function(){}
+      });
+
+      expect(cmd.getSource()).toBeFalsy();
+    });
+
   });
 });

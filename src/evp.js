@@ -1,15 +1,15 @@
 'use strict';
 
-var Processor           = require('./Processor');
-var Source              = require('./Source');
-var Command             = require('./Command');
+let Processor           = require('./Processor');
+let Source              = require('./Source');
+let Command             = require('./Command');
 
-var Discard             = require('./commands/Discard');
-var Forward             = require('./commands/Forward');
-var If                  = require('./commands/If');
-var Log                 = require('./commands/Log');
-var Switch              = require('./commands/Switch');
-var Transform           = require('./commands/Transform');
+let Discard             = require('./commands/Discard');
+let Forward             = require('./commands/Forward');
+let If                  = require('./commands/If');
+let Log                 = require('./commands/Log');
+let Switch              = require('./commands/Switch');
+let Transform           = require('./commands/Transform');
 
 Command.register('discard', Discard);
 Command.register('forward', Forward);
@@ -18,7 +18,7 @@ Command.register('log', Log);
 Command.register('switch', Switch);
 Command.register('transform', Transform);
 
-var evp = new Processor();
+let evp = new Processor();
 
 evp.registerCommand = function(name, cmd) {
   return Command.register(name, cmd);

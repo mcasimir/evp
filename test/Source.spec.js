@@ -1,11 +1,22 @@
 'use strict';
 
-let Source = require('../src/Source');
+let Source   = require('../src/Source');
+let Pipeline = require('../src/Pipeline');
+let Command  = require('../src/Command');
+let Logger   = require('../src/Logger');
+let winston  = Logger.getGlobalLogger().winston;
 
 describe('Source', function() {
 
   beforeEach(function(){
+    this.commandRegistryBackup  = Object.assign({}, Command.registry);
+    this.sourceRegistryBackup   = Object.assign({}, Source.registry);
     delete Source.registry;
+  });
+
+  afterEach(function() {
+    Command.registry = this.commandRegistryBackup;
+    Source.registry = this.soucreRegistryBackup;
   });
 
   describe('extends', function() {
@@ -103,6 +114,23 @@ describe('Source', function() {
 
   });
 
+  describe('setPipeline', function() {
+
+    it('has to set itself as source for added pipeline', function() {
+      let Src = Source.extend({
+        listen: function() {}
+      });
+
+      let src = new Src('src', {});
+      let pipeline = new Pipeline();
+
+      src.setPipeline(pipeline);
+
+      expect(pipeline.getSource()).toBe(src);
+    });
+
+  });
+
   describe('listen', function() {
 
     it('should have access to configuration', function() {
@@ -118,6 +146,67 @@ describe('Source', function() {
       let src = new Src('src', conf);
       src.listen();
       expect(internalConf).toBe(conf);
+    });
+
+    it('should be able to log', function () {
+      spyOn(winston, 'log');
+
+      let Src = Source.extend({
+        listen: function() {
+          this.log('debug', 'message');
+        }
+      });
+
+      let src = new Src('src', {});
+      src.listen();
+      expect(winston.log).toHaveBeenCalled();
+    });
+
+    it('should log prompting source name', function () {
+      spyOn(winston, 'log');
+
+      let Src = Source.extend({
+        listen: function() {
+          this.log('info', 'message');
+        }
+      });
+
+      let src = new Src('src', {});
+      src.listen();
+      let lastCall = winston.log.calls.first();
+      expect(lastCall.args[1]).toBe('[src] message');
+    });
+
+  });
+
+  describe('event', function(){
+
+    it('should catch if a command on a pipeline fails', function(done) {
+      let Src = Source.extend({
+        listen: function() {}
+      });
+
+      let src = new Src('src', {});
+      let pipeline = new Pipeline();
+      let err1  = new Error('This command will fail');
+      let cmd = Command.create({
+        run: function(){
+          return Promise.reject(err1);
+        }
+      });
+
+      src.setPipeline(pipeline);
+
+      pipeline.addCommand(cmd);
+
+      src.event({})
+        .then(function() {
+          expect(false).toBe('true', 'it should never get here');
+        })
+        .catch(function(err2){
+          expect(err1).toBe(err2);
+          done();
+        });
     });
 
   });

@@ -1,7 +1,7 @@
 'use strict';
 
-var evp = require('..');
-var Processor = require('../src/Processor');
+let evp = require('..');
+let Processor = require('../src/Processor');
 
 describe('index.js', function() {
   it('should export evp', function() {

@@ -37,9 +37,9 @@ class Source extends EventEmitter {
   }
 
   static createFromRegistry(type, name, config) {
-    let Cls = this.get(type);
-    if (Cls) {
-      return new Cls(name, config);
+    let SourceClass = this.get(type);
+    if (SourceClass) {
+      return new SourceClass(name, config);
     } else {
       return null;
     }

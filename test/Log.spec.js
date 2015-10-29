@@ -1,6 +1,8 @@
 'use strict';
 
-var Log = require('../src/commands/Log');
+var Log     = require('../src/commands/Log');
+var Logger  = require('../src/Logger');
+var winston = Logger.getGlobalLogger().winston;
 
 describe('Log', function() {
 
@@ -25,8 +27,8 @@ describe('Log', function() {
       });
     });
 
-    it('should call console.log', function(done) {
-      spyOn(console, 'log');
+    it('should call winston.log', function(done) {
+      spyOn(winston, 'log');
 
       var event = {
         a: {
@@ -39,7 +41,7 @@ describe('Log', function() {
       var cmd = new Log();
 
       cmd.run(event).then(function() {
-        expect(console.log).toHaveBeenCalled();
+        expect(winston.log).toHaveBeenCalled();
         done();
       });
     });

@@ -1,9 +1,8 @@
 'use strict';
 
-var Source = require('../src/Source');
-var Command = require('../src/Command');
+var Source    = require('../src/Source');
+var Command   = require('../src/Command');
 var Processor = require('../src/Processor');
-var Processor = new Processor();
 
 class DummyCommand extends Command {
   run(event){
@@ -25,17 +24,22 @@ class DummySource extends Source {
   }
 }
 
-describe('Processor', function() {
+describe('processor', function() {
 
-  beforeEach(() => {
+  beforeEach(function() {
     Source.register('dummySource', DummySource);
     Command.register('dummy', DummyCommand);
     Command.register('error', ErrorCommand);
+    this.processor = new Processor();
+  });
+
+  it('should expose logger', function() {
+    expect(this.processor.logger).toBeDefined();
   });
 
   describe('can be used very easily', function() {
     it('can hook up a source with a command', function(done) {
-      Processor.configure({
+      this.processor.configure({
         dummySource: {
           type: 'dummySource',
           config: {},
@@ -45,9 +49,9 @@ describe('Processor', function() {
         }
       });
 
-      Processor.listen();
+      this.processor.listen();
 
-      Processor.on('eventProcessed', (e) => {
+      this.processor.on('eventProcessed', (e) => {
         expect(e.source.name).toEqual('dummySource');
         expect(e.result.time).toBeDefined();
         done();
@@ -55,7 +59,7 @@ describe('Processor', function() {
     });
 
     it('notifies about an event failure', function(done) {
-      Processor.configure({
+      this.processor.configure({
         dummySource: {
           type: 'dummySource',
           config: {},
@@ -65,9 +69,9 @@ describe('Processor', function() {
         }
       });
 
-      Processor.listen();
+      this.processor.listen();
 
-      Processor.on('eventProcessingError', (e) => {
+      this.processor.on('eventProcessingError', (e) => {
         expect(e.source.name).toEqual('dummySource');
         done();
       });

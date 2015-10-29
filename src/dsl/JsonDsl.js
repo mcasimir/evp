@@ -1,14 +1,13 @@
 'use strict';
 
-var _ = require('lodash');
-var Command = require('../Command');
-var Source = require('../Source');
-var Pipeline = require('../Pipeline');
-var JsonDslError = require('./JsonDslError');
+var _             = require('lodash');
+var Command       = require('../Command');
+var Source        = require('../Source');
+var Pipeline      = require('../Pipeline');
+var JsonDslError  = require('./JsonDslError');
 
 class JsonDsl {
-  constructor() {
-  }
+  constructor() {}
 
   parseCommand(def) {
     var pair = this.parsePair(def);
@@ -16,6 +15,7 @@ class JsonDsl {
     var config = pair.value;
 
     var cmd = Command.create(name, config);
+
     if (!cmd) {
       throw new JsonDslError(`Unable to find a Command for type ${name}`);
     }
@@ -39,7 +39,7 @@ class JsonDsl {
     if (!source) {
       throw new JsonDslError(`Unable to find an Source for type ${definition.type}`);
     }
-    source.pipelines.push(this.parsePipeline(definition.process));
+    source.addPipeline(this.parsePipeline(definition.process));
 
     return source;
   }

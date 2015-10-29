@@ -1,5 +1,8 @@
 'use strict';
 
+var Logger        = require('./Logger');
+var shortid       = require('shortid');
+
 class Command {
 
   static _registryGetSet(name, value) {
@@ -35,7 +38,7 @@ class Command {
   static createFromRegistry(name, config) {
     var Cls = this.get(name);
     if (Cls) {
-      return new Cls(config);
+      return new Cls(config, name);
     } else {
       return null;
     }
@@ -49,8 +52,29 @@ class Command {
     }
   }
 
-  constructor(config) {
+  constructor(config, name, id) {
     this.config = config || {};
+    this.id         = id || shortid.generate();
+    this.name       = name || this.constructor.name;
+    this.uniqueName = [name, id].join('#');
+    this.logger     = Logger.getLoggerFor(this.uniqueName);
+    this.pipeline   = null;
+  }
+
+  log() {
+    return this.logger.log.apply(this.logger, arguments);
+  }
+
+  setPipeline(pipeline) {
+    this.pipeline = pipeline;
+  }
+
+  getPipeline() {
+    return this.pipeline;
+  }
+
+  getSource() {
+    return this.pipeline && this.pipeline.getSource();
   }
 
   /**

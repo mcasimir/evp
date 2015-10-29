@@ -76,6 +76,15 @@ class Source extends EventEmitter {
     return Promise.all(pipelinePromises);
   }
 
+  log() {
+    return this.logger.log.apply(this.logger, arguments);
+  }
+
+  addPipeline(pipeline) {
+    pipeline.setSource(this);
+    this.pipelines.push(pipeline);
+  }
+
   /**
    * @abstract
    */

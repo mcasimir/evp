@@ -1,10 +1,10 @@
 'use strict';
 
-let Command  = require('../src/Command');
-let Source   = require('../src/Source');
-let Pipeline = require('../src/Pipeline');
-let Logger   = require('../src/Logger');
-let winston  = Logger.getGlobalLogger().winston;
+let Command    = require('../src/Command');
+let Source     = require('../src/Source');
+let Pipeline   = require('../src/Pipeline');
+let Logger     = require('../src/Logger');
+let loggerImpl = Logger.getImpl();
 
 describe('Command', function() {
 
@@ -137,7 +137,7 @@ describe('Command', function() {
     });
 
     it('should be able to log', function () {
-      spyOn(winston, 'log');
+      spyOn(loggerImpl, 'log');
 
       let Cmd = Command.extend({
         run: function() {
@@ -147,11 +147,11 @@ describe('Command', function() {
 
       let cmd = new Cmd({});
       cmd.run();
-      expect(winston.log).toHaveBeenCalled();
+      expect(loggerImpl.log).toHaveBeenCalled();
     });
 
     it('should log command path', function () {
-      spyOn(winston, 'log');
+      spyOn(loggerImpl, 'log');
 
       let Src = Source.extend({
         listen: function() {}
@@ -170,7 +170,7 @@ describe('Command', function() {
       pipeline.addCommand(cmd);
 
       cmd.run();
-      let lastCall = winston.log.calls.first();
+      let lastCall = loggerImpl.log.calls.first();
       expect(lastCall.args[1]).toMatch(/\[src1\.Pipeline#\d+\-\d+\.Command#\d+\-\d+\] message/);
     });
   });

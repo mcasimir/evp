@@ -33,6 +33,8 @@ describe('processor', function() {
     Command.register('dummy', DummyCommand);
     Command.register('error', ErrorCommand);
     this.processor = new Processor();
+
+    spyOn(this.processor.logger.getImpl(), 'log'); // silence logger
   });
 
   afterEach(function() {

@@ -34,11 +34,11 @@ describe('evp', function() {
   });
 
   it('should expose logger', function() {
-    expect(evp.logger).toBe(Logger.getGlobalLogger());
+    expect(evp.logger).toBe(Logger);
   });
 
-  it('should expose dsl', function() {
-    expect(evp.dsl instanceof JsonDsl).toBe(true);
+  it('should expose parser', function() {
+    expect(evp.parser instanceof JsonDsl).toBe(true);
   });
 
   it('should allow to register a new Command with class', function() {

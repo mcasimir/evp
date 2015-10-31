@@ -29,12 +29,20 @@ class Processor extends EventEmitter {
 
       source.on('eventProcessed', (evt) => {
         this.emit('eventProcessed', evt);
-        this.logger.log('info', 'Event Processed', evt);
+        this.logger.log('info', 'Event Processed', {
+            source: evt.source.uniqueName,
+            event:  evt.event,
+            result: evt.result
+          });
       });
 
       source.on('eventProcessingError', (err) => {
         this.emit('eventProcessingError', err);
-        this.logger.log('error', 'Event Processing Error', err);
+        this.logger.log('error', 'Processor Error', {
+          source: err.source.uniqueName,
+          event:  err.event,
+          error:  err.error
+        });
       });
 
       return source.listen();

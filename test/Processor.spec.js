@@ -11,8 +11,8 @@ class DummyCommand extends Command {
 }
 
 class ErrorCommand extends Command {
-  run(event){
-    return Promise.reject(event);
+  run(){
+    return Promise.reject(new Error('Errored'));
   }
 }
 

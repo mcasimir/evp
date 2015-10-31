@@ -174,7 +174,7 @@ describe('Source', function() {
       let src = new Src('src', {});
       src.listen();
       let lastCall = loggerImpl.log.calls.first();
-      expect(lastCall.args[1]).toBe('[src] message');
+      expect(lastCall.args[1]).toBe('[Source#src] message');
     });
 
   });

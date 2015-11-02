@@ -4,24 +4,24 @@ let DefaultLogger = require('./DefaultLogger');
 
 class Logger {
 
-  constructor(impl) {
-    this.impl = impl || new DefaultLogger();
+  constructor(logger) {
+    this.logger = logger || new DefaultLogger();
   }
 
-  setImpl(impl) {
-    this.impl = impl;
+  setLogger(logger) {
+    this.logger = logger;
   }
 
-  getImpl() {
-    return this.impl;
+  getLogger() {
+    return this.logger;
   }
 
   log(level, message, meta) {
-    return this.impl.log(level, message, meta);
+    return this.logger.log(level, message, meta);
   }
 
   logAs(component, level, message, metadata) {
-    return this.impl.log(level, `[${component}] ${message}`.trim(), metadata);
+    return this.logger.log(level, `[${component}] ${message}`.trim(), metadata);
   }
 
 }

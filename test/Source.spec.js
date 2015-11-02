@@ -4,7 +4,7 @@ let Source     = require('../src/Source');
 let Pipeline   = require('../src/Pipeline');
 let Command    = require('../src/Command');
 let Logger     = require('../src/Logger');
-let loggerImpl = Logger.getImpl();
+let loggerImpl = Logger.getLogger();
 
 describe('Source', function() {
 

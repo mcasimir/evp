@@ -2,7 +2,7 @@
 
 let Log        = require('../src/commands/Log');
 let Logger     = require('../src/Logger');
-let loggerImpl = Logger.getImpl();
+let loggerImpl = Logger.getLogger();
 
 describe('Log', function() {
 

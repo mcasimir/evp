@@ -34,7 +34,7 @@ describe('processor', function() {
     Command.register('error', ErrorCommand);
     this.processor = new Processor();
 
-    spyOn(this.processor.logger.getImpl(), 'log'); // silence logger
+    spyOn(this.processor.logger.getLogger(), 'log'); // silence logger
   });
 
   afterEach(function() {

@@ -1,33 +1,36 @@
 'use strict';
 
-let winston   = require('winston');
-let inspect   = require('util').inspect;
+let DefaultLogger = require('./DefaultLogger');
 
-let globalLogger = {
-  winston: winston,
+class Logger {
 
-  log: function(level, message, metadata) {
-    message = typeof message === 'string' ? message : inspect(message, { depth: null });
-    return this.winston.log(level, message, metadata);
-  },
-
-  setLevel: function(level) {
-    this.winston.level = level;
-  }
-};
-
-module.exports = {
-
-  getGlobalLogger: function() {
-    return globalLogger;
-  },
-
-  log: function(level, message, metadata) {
-    return globalLogger.log(level, message, metadata);
-  },
-
-  logAs: function(component, level, message, metadata) {
-    return globalLogger.log(level, `[${component}] ${message}`.trim(), metadata);
+  constructor(logger) {
+    this.logger = logger || new DefaultLogger();
   }
 
-};
+  setLogger(logger) {
+    this.logger = logger;
+  }
+
+  getLogger() {
+    return this.logger;
+  }
+
+  log(level, message, meta) {
+    return this.logger.log(level, message, meta);
+  }
+
+  logAs(component, level, message, metadata) {
+    return this.logger.log(level, `[${component}] ${message}`.trim(), metadata);
+  }
+
+}
+
+// The following will ensure 100% it is a sigleton.
+// Otherwise `require('../Logger')` and `require('./Logger')` will cause
+// node to cache 2 distinct modules and produce 2 different instances
+// refering to separate internal state, thus causing implementation
+// to be inconsistent.
+global.__evp_logger_instance = global.__evp_logger_instance || new Logger();
+
+module.exports = global.__evp_logger_instance;

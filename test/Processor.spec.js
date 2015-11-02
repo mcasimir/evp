@@ -11,8 +11,8 @@ class DummyCommand extends Command {
 }
 
 class ErrorCommand extends Command {
-  run(event){
-    return Promise.reject(event);
+  run(){
+    return Promise.reject(new Error('Errored'));
   }
 }
 
@@ -33,6 +33,8 @@ describe('processor', function() {
     Command.register('dummy', DummyCommand);
     Command.register('error', ErrorCommand);
     this.processor = new Processor();
+
+    spyOn(this.processor.logger.getLogger(), 'log'); // silence logger
   });
 
   afterEach(function() {

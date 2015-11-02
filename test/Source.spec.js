@@ -1,10 +1,10 @@
 'use strict';
 
-let Source   = require('../src/Source');
-let Pipeline = require('../src/Pipeline');
-let Command  = require('../src/Command');
-let Logger   = require('../src/Logger');
-let winston  = Logger.getGlobalLogger().winston;
+let Source     = require('../src/Source');
+let Pipeline   = require('../src/Pipeline');
+let Command    = require('../src/Command');
+let Logger     = require('../src/Logger');
+let loggerImpl = Logger.getLogger();
 
 describe('Source', function() {
 
@@ -149,7 +149,7 @@ describe('Source', function() {
     });
 
     it('should be able to log', function () {
-      spyOn(winston, 'log');
+      spyOn(loggerImpl, 'log');
 
       let Src = Source.extend({
         listen: function() {
@@ -159,11 +159,11 @@ describe('Source', function() {
 
       let src = new Src('src', {});
       src.listen();
-      expect(winston.log).toHaveBeenCalled();
+      expect(loggerImpl.log).toHaveBeenCalled();
     });
 
     it('should log prompting source name', function () {
-      spyOn(winston, 'log');
+      spyOn(loggerImpl, 'log');
 
       let Src = Source.extend({
         listen: function() {
@@ -173,8 +173,8 @@ describe('Source', function() {
 
       let src = new Src('src', {});
       src.listen();
-      let lastCall = winston.log.calls.first();
-      expect(lastCall.args[1]).toBe('[src] message');
+      let lastCall = loggerImpl.log.calls.first();
+      expect(lastCall.args[1]).toBe('[Source#src] message');
     });
 
   });

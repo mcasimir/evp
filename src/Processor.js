@@ -12,8 +12,8 @@ class Processor extends EventEmitter {
     config = config || {};
 
     this.sources      = {};
-    this.logger       = Logger.getGlobalLogger();
-    this.dsl          = new JsonDsl();
+    this.logger       = Logger;
+    this.parser       = new JsonDsl();
 
     if (config) {
       this.configure(config);
@@ -21,7 +21,7 @@ class Processor extends EventEmitter {
   }
 
   configure(sourcesConfig) {
-    this.sources = this.dsl.parse(sourcesConfig);
+    this.sources = this.parser.parse(sourcesConfig);
   }
 
   listen() {
@@ -29,12 +29,20 @@ class Processor extends EventEmitter {
 
       source.on('eventProcessed', (evt) => {
         this.emit('eventProcessed', evt);
-        this.logger.log('debug', 'eventProcessed', evt);
+        this.logger.log('info', 'Event Processed', {
+            source: evt.source.uniqueName,
+            event:  evt.event,
+            result: evt.result
+          });
       });
 
       source.on('eventProcessingError', (err) => {
         this.emit('eventProcessingError', err);
-        this.logger.log('error', 'eventProcessingError', err);
+        this.logger.log('error', 'Processor Error', {
+          source: err.source.uniqueName,
+          event:  err.event,
+          error:  err.error
+        });
       });
 
       return source.listen();

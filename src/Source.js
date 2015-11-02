@@ -55,10 +55,11 @@ class Source extends EventEmitter {
 
   constructor(name, config) {
     super();
-    this.name     = name;
-    this.config   = config || {};
-    this.logger   = Logger;
-    this.pipeline = new Pipeline([], 'NullPipeline');
+    this.name       = name;
+    this.config     = config || {};
+    this.logger     = Logger;
+    this.pipeline   = new Pipeline([], 'NullPipeline');
+    this.uniqueName = `${this.constructor.name || 'Source'}#${this.name}`;
   }
 
   event(event) {
@@ -66,17 +67,25 @@ class Source extends EventEmitter {
 
     return this.pipeline.run(event)
       .then((result) => {
-        this.emit('eventProcessed', {source: this, result: result});
+        this.emit('eventProcessed', {
+          source: this,
+          event:  event,
+          result: result
+        });
         return result;
       })
       .catch((error) => {
-        this.emit('eventProcessingError', {source: this, error: error});
+        this.emit('eventProcessingError', {
+          source: this,
+          event:  event,
+          error:  error
+        });
         return Promise.reject(error);
       });
   }
 
   log(level, message, metadata) {
-    return this.logger.logAs(this.name, level, message, metadata);
+    return this.logger.logAs(this.uniqueName, level, message, metadata);
   }
 
   setPipeline(pipeline) {
